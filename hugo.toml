@@ -3,7 +3,6 @@
 
 baseURL = 'https://uptime-intel.com/'
 title = 'Cloud Observability & Uptime Intel'
-theme = ''
 
 [languages.en]
   locale = 'en-US'

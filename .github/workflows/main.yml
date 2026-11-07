@@ -39,7 +39,7 @@ concurrency:
 # ---------------------------------------------------------
 jobs:
   build-and-deploy:
-    runs-on: ubuntu-latest
+    runs-on: ubuntu-24.04
     # Coupe-circuit matériel : tue le job s'il bloque plus de 15 minutes (défaut GitHub : 360 min)
     timeout-minutes: 15
 
