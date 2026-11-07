@@ -1,0 +1,273 @@
+<!-- Chemin exact : layouts/legal/single.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{ partial "head.html" . }}
+    <style>
+        /* Palette B2B SaaS Enterprise (Dark Slate, Deep Indigo & Emerald) */
+        :root { 
+            --primary: #4f46e5; 
+            --primary-dark: #4338ca; 
+            --primary-light: #e0e7ff;
+            --primary-ultra-light: #eef2ff;
+            --dark-950: #090d16;
+            --dark-900: #0f172a;
+            --dark-800: #1e293b;
+            --text-900: #0f172a; 
+            --text-700: #334155; 
+            --text-500: #64748b;
+            --text-400: #94a3b8;
+            --bg-canvas: #f8fafc; /* Fond simple, pur et uni */
+            --bg-body: #f8fafc; 
+            --bg-card: #ffffff;
+            --border-light: #e2e8f0; 
+            --border-dark: #cbd5e1;
+            --emerald: #10b981;
+        }
+        
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 15.5px;
+            line-height: 1.75;
+            color: var(--text-700);
+            background-color: var(--bg-canvas);
+            background-image: none;
+            margin: 0;
+            padding: 0;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        /* 1. Navigation Sombre Glassmorphism (Largeur 980px) */
+        .site-header {
+            background-color: rgba(9, 13, 22, 0.92);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 1rem 1.5rem;
+        }
+        .site-brand {
+            font-size: 1.1rem;
+            font-weight: 800;
+            color: #ffffff !important;
+            text-decoration: none;
+            letter-spacing: -0.025em;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+        .brand-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #818cf8, #38bdf8);
+            box-shadow: 0 0 10px rgba(129, 140, 248, 0.85);
+        }
+        .nav-links { display: flex; gap: 1.85rem; }
+        .nav-links a { color: #cbd5e1; text-decoration: none; font-weight: 500; font-size: 0.89rem; transition: color 0.2s ease; }
+        .nav-links a:hover { color: #ffffff; }
+
+        /* 2. Hero Header "Dark Slate" Pleine Largeur (Conteneur 980px) */
+        .legal-hero {
+            background-color: var(--dark-900);
+            background-image: 
+                radial-gradient(ellipse 75% 85% at 50% -20%, rgba(79, 70, 229, 0.34), transparent),
+                radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.12), transparent 45%);
+            border-bottom: 1px solid var(--dark-800);
+            padding: 3rem 1.5rem 5rem;
+            color: #ffffff;
+        }
+        .legal-hero-inner {
+            max-width: 980px;
+            margin: 0 auto;
+        }
+        .legal-breadcrumb {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+            font-size: 0.7rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: #e0e7ff;
+            background-color: rgba(79, 70, 229, 0.24);
+            border: 1px solid rgba(129, 140, 248, 0.4);
+            padding: 0.32rem 0.9rem;
+            border-radius: 9999px;
+            margin-bottom: 1.1rem;
+        }
+        .legal-breadcrumb svg {
+            width: 13px;
+            height: 13px;
+            color: #818cf8;
+        }
+        .legal-hero h1 {
+            font-size: clamp(2.35rem, 4vw, 3.15rem);
+            line-height: 1.12;
+            margin: 0 0 1.35rem 0;
+            letter-spacing: -0.035em;
+            color: #ffffff;
+            font-weight: 800;
+            max-width: 900px;
+        }
+        .meta-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.65rem;
+            margin: 0;
+        }
+        .meta-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.42rem;
+            background-color: rgba(30, 41, 59, 0.75);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            padding: 0.35rem 0.85rem;
+            border-radius: 9999px;
+            font-size: 0.78rem;
+            color: #e2e8f0;
+            font-weight: 500;
+        }
+        .meta-pill svg { width: 13px; height: 13px; color: #818cf8; }
+
+        /* 3. Feuille de Document Légal en Superposition (980px) */
+        .legal-main-container {
+            max-width: 980px;
+            margin: -3rem auto 4.5rem;
+            padding: 0 1.25rem;
+            position: relative;
+            z-index: 10;
+        }
+        .legal-sheet {
+            background-color: var(--bg-card);
+            border-radius: 20px;
+            padding: 2rem 1.5rem;
+            border: 1px solid var(--border-light);
+            box-shadow: 
+                0 16px 40px -14px rgba(15, 23, 42, 0.07),
+                0 2px 6px rgba(15, 23, 42, 0.02);
+        }
+        @media (min-width: 768px) {
+            .legal-sheet {
+                padding: 2.85rem 3.5rem;
+            }
+        }
+        
+        /* 4. Typographie Légale Calibrée */
+        article h2 {
+            font-size: 1.38rem;
+            line-height: 1.3;
+            color: var(--text-900);
+            margin: 2.5rem 0 1rem 0;
+            padding: 0.12rem 0 0.12rem 0.9rem;
+            border-left: 3.5px solid var(--primary);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+        article h2:first-child {
+            margin-top: 0.5rem;
+        }
+        article h3 {
+            font-size: 1.1rem;
+            color: var(--text-900);
+            margin: 1.85rem 0 0.75rem 0;
+            font-weight: 700;
+        }
+        article p, article li {
+            font-size: 0.98rem;
+            line-height: 1.75;
+            margin-bottom: 1.15rem;
+            color: var(--text-700);
+        }
+        article ul {
+            padding-left: 1.35rem;
+            margin: 0.5rem 0 1.5rem 0;
+        }
+        article strong {
+            color: var(--text-900);
+            font-weight: 600;
+        }
+        article a {
+            color: var(--primary);
+            text-decoration: none;
+            font-weight: 600;
+        }
+        article a:hover {
+            color: var(--primary-dark);
+            text-decoration: underline;
+        }
+
+        @media (max-width: 768px) {
+            .nav-links { display: none; }
+            .legal-hero h1 { font-size: 2.15rem; }
+            .legal-hero { padding: 2.35rem 1.25rem 4.25rem; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 1. Navigation Sombre Glassmorphism (980px) -->
+    <header class="site-header">
+        <div class="nav-inner">
+            <a href="/" class="site-brand">
+                <span class="brand-dot" aria-hidden="true"></span>
+                <span>{{ .Site.Title }}</span>
+            </a>
+            <nav class="nav-links">
+                <a href="/">Latest Reports</a>
+                {{ range where .Site.RegularPages "Section" "legal" }}
+                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                {{ end }}
+            </nav>
+        </div>
+    </header>
+
+    <!-- 2. Bannière Hero "Dark Slate" Pleine Largeur (Conteneur interne 980px) -->
+    <section class="legal-hero">
+        <div class="legal-hero-inner">
+            <div class="legal-breadcrumb">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                <span>Legal &amp; Compliance Documentation</span>
+            </div>
+
+            <h1>{{ .Title }}</h1>
+
+            <div class="meta-group">
+                <div class="meta-pill">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    FTC 16 CFR Part 255 Compliant
+                </div>
+                <div class="meta-pill">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                    Effective Date: {{ .Lastmod.Format "Jan 2, 2006" }}
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Feuille de Document Légal (980px) -->
+    <main class="legal-main-container">
+        <div class="legal-sheet">
+            <article>
+                {{ .Content }}
+            </article>
+        </div>
+    </main>
+    
+    <!-- Injection du footer Dark Slate aligné sur 980px -->
+    {{ partial "footer.html" . }}
+</body>
+</html>

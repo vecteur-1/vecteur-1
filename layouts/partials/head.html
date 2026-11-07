@@ -1,0 +1,70 @@
+<!-- layouts/partials/head.html -->
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<!-- 1. SEO Dynamique de base (Géré par la Quality Gate) -->
+<title>{{ .Title }} | {{ .Site.Title }}</title>
+<meta name="description" content="{{ .Params.description | default .Summary }}">
+<meta name="robots" content="{{ .Params.seo_index | default "noindex" }}">
+<link rel="canonical" href="{{ .Permalink }}">
+
+<!-- 2. Balises Open Graph (Partage B2B sur LinkedIn/Twitter) -->
+<meta property="og:title" content="{{ .Title }}">
+<meta property="og:description" content="{{ .Params.description | default .Summary }}">
+<meta property="og:type" content="article">
+<meta property="og:url" content="{{ .Permalink }}">
+{{ if .Params.image }}
+<meta property="og:image" content="{{ .Params.image | absURL }}">
+{{ end }}
+
+<!-- 3. SEO Technique : Données Structurées JSON-LD Schema.org -->
+<script type="application/ld+json">
+{{ if eq .Params.type_page "review" }}
+{
+  "@context": "https://schema.org/",
+  "@type": "Review",
+  "itemReviewed": {
+    "@type": "SoftwareApplication",
+    "name": "{{ .Params.outil_cible | default "[DONNÉE MANQUANTE]" }}",
+    "applicationCategory": "BusinessApplication"
+  },
+  "reviewRating": {
+    "@type": "Rating",
+    "ratingValue": "{{ .Params.preuve_sociale_note | default "5" }}",
+    "bestRating": "5"
+  },
+  "author": {
+    "@type": "Organization",
+    "name": "{{ .Site.Params.author }}"
+  },
+  "headline": "{{ .Title }}",
+  "datePublished": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}"
+}
+{{ else }}
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "{{ .Title }}",
+  "datePublished": "{{ .Date.Format "2006-01-02T15:04:05Z07:00" }}",
+  "author": {
+    "@type": "Organization",
+    "name": "{{ .Site.Params.author }}"
+  }
+}
+{{ end }}
+</script>
+
+<!-- 4. Point d'intégration Analytics (Plausible sans cookie) -->
+<!-- Remplacer 'ton-futur-domaine.com' par ton domaine réel une fois acheté -->
+<script defer data-domain="uptime-intel.com" src="https://plausible.io/js/script.tagged-events.js"></script>
+
+<!-- 5. Identité Visuelle & Favicons (Indigo Premium) -->
+<link rel="icon" href="/favicon.svg" type="image/svg+xml">
+<!-- Fallback PNG pour les anciens navigateurs -->
+<link rel="icon" href="/favicon.png" type="image/png" sizes="32x32">
+<!-- Icône haute résolution pour les favoris iOS/Apple -->
+<link rel="apple-touch-icon" href="/apple-touch-icon.png" sizes="180x180">
+<!-- Fichier de manifeste PWA -->
+<link rel="manifest" href="/site.webmanifest">
+<!-- Définit la couleur de la barre de statut sur mobile (assorti au fond Slate 50) -->
+<meta name="theme-color" content="#f8fafc">

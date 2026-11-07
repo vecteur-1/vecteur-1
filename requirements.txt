@@ -1,0 +1,13 @@
+# Chemin exact : requirements.txt
+# Dépendances Python du pipeline Vecteur 1 (Budget 0 $, bibliothèques open-source uniquement)
+
+# Client HTTP et gestionnaire de pool de connexions avec support natif de backoff_jitter
+requests>=2.31.0,<3.0.0
+urllib3>=2.2.0,<3.0.0
+
+# Mise en cache HTTP persistante sur base SQLite locale
+requests-cache>=1.2.0,<2.0.0
+
+# Lecture et écriture idempotente du Frontmatter YAML des articles Hugo
+python-frontmatter>=1.1.0,<2.0.0
+PyYAML>=6.0.1,<7.0.0

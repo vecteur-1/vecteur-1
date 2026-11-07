@@ -1,0 +1,181 @@
+<!-- Chemin exact : layouts/partials/footer.html -->
+<style>
+    .site-footer-enterprise {
+        background-color: #0f172a;
+        background-image: 
+            radial-gradient(ellipse 60% 50% at 50% 0%, rgba(79, 70, 229, 0.14), transparent),
+            linear-gradient(180deg, #0f172a 0%, #090d16 100%);
+        color: #94a3b8;
+        border-top: 1px solid #1e293b;
+        margin-top: 4.5rem;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        -webkit-font-smoothing: antialiased;
+    }
+    .footer-inner {
+        max-width: 980px;
+        margin: 0 auto;
+        padding: 3.25rem 1.5rem 2.25rem;
+    }
+    .footer-grid {
+        display: grid;
+        grid-template-columns: 1fr;
+        gap: 2.25rem;
+        padding-bottom: 2.25rem;
+        border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+    }
+    @media (min-width: 768px) {
+        .footer-grid {
+            grid-template-columns: 1.55fr 1fr 1.25fr;
+            gap: 2.75rem;
+        }
+    }
+    .footer-brand-row {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.55rem;
+        font-size: 1.08rem;
+        font-weight: 800;
+        color: #ffffff !important;
+        text-decoration: none !important;
+        letter-spacing: -0.025em;
+        margin-bottom: 0.8rem;
+    }
+    .footer-brand-dot {
+        width: 8px;
+        height: 8px;
+        border-radius: 50%;
+        background: linear-gradient(135deg, #818cf8, #38bdf8);
+        box-shadow: 0 0 10px rgba(129, 140, 248, 0.8);
+    }
+    .footer-mission {
+        font-size: 0.85rem;
+        line-height: 1.62;
+        color: #94a3b8;
+        margin: 0 0 1.05rem 0;
+        max-width: 350px;
+    }
+    .footer-status-pill {
+        display: inline-flex;
+        align-items: center;
+        gap: 0.45rem;
+        font-size: 0.74rem;
+        font-weight: 600;
+        color: #e2e8f0;
+        background-color: rgba(30, 41, 59, 0.8);
+        border: 1px solid rgba(255, 255, 255, 0.1);
+        padding: 0.32rem 0.78rem;
+        border-radius: 9999px;
+    }
+    .footer-status-dot {
+        width: 6.5px;
+        height: 6.5px;
+        border-radius: 50%;
+        background-color: #10b981;
+        box-shadow: 0 0 8px rgba(16, 185, 129, 0.9);
+    }
+    .footer-col-title {
+        font-size: 0.72rem;
+        font-weight: 800;
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+        color: #f8fafc;
+        margin: 0 0 0.9rem 0;
+    }
+    .footer-links {
+        list-style: none;
+        padding: 0;
+        margin: 0;
+        display: flex;
+        flex-direction: column;
+        gap: 0.6rem;
+    }
+    .footer-links a {
+        color: #cbd5e1 !important;
+        text-decoration: none !important;
+        font-size: 0.86rem;
+        font-weight: 500;
+        transition: color 0.2s ease;
+    }
+    .footer-links a:hover {
+        color: #ffffff !important;
+    }
+    .footer-compliance-note {
+        font-size: 0.78rem;
+        line-height: 1.58;
+        color: #64748b;
+        margin: 0.8rem 0 0 0;
+    }
+    .footer-bottom {
+        padding-top: 1.6rem;
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: space-between;
+        gap: 0.7rem;
+        font-size: 0.8rem;
+        color: #64748b;
+    }
+    @media (min-width: 640px) {
+        .footer-bottom {
+            flex-direction: row;
+        }
+    }
+    .footer-bottom p {
+        margin: 0;
+    }
+    .footer-badge-tech {
+        font-size: 0.74rem;
+        color: #94a3b8;
+        font-weight: 500;
+    }
+</style>
+
+<footer class="site-footer-enterprise">
+    <div class="footer-inner">
+        <div class="footer-grid">
+            <!-- Colonne 1 : Marque, Mission & Statut du Pipeline -->
+            <div>
+                <a href="/" class="footer-brand-row">
+                    <span class="footer-brand-dot" aria-hidden="true"></span>
+                    <span>{{ .Site.Title }}</span>
+                </a>
+                <p class="footer-mission">
+                    Independent cloud infrastructure reliability benchmarks, historical outage telemetry, and synthetic monitoring evaluations for SRE &amp; DevOps teams.
+                </p>
+                <div class="footer-status-pill">
+                    <span class="footer-status-dot" aria-hidden="true"></span>
+                    <span>Telemetry Ingestion Pipeline: Active</span>
+                </div>
+            </div>
+
+            <!-- Colonne 2 : Navigation Architecture -->
+            <div>
+                <h3 class="footer-col-title">Research &amp; Intel</h3>
+                <ul class="footer-links">
+                    <li><a href="/">Latest Uptime Reports</a></li>
+                    <li><a href="/#">90-Day Outage Benchmarks</a></li>
+                </ul>
+            </div>
+
+            <!-- Colonne 3 : Pages Légales & Conformité FTC -->
+            <div>
+                <h3 class="footer-col-title">Legal &amp; Compliance</h3>
+                <ul class="footer-links">
+                    {{ range where .Site.RegularPages "Section" "legal" }}
+                    <li>
+                        <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                    </li>
+                    {{ end }}
+                </ul>
+                <p class="footer-compliance-note">
+                    FTC Disclosure: Reader-supported independent research. We may earn commissions from partner links at no extra cost to you.
+                </p>
+            </div>
+        </div>
+
+        <div class="footer-bottom">
+            <p>&copy; {{ now.Format "2006" }} {{ .Site.Title }}. All rights reserved.</p>
+            <span class="footer-badge-tech">Built for SRE &amp; Production Infrastructure Teams</span>
+        </div>
+    </div>
+</footer>

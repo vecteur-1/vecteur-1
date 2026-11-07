@@ -1,0 +1,63 @@
+<!-- Chemin exact : layouts/_default/_markup/render-image.html -->
+<!-- 
+  Render Hook d'images Hugo (Phase 3 : Sémantique HTML5 <figure>/<figcaption> + Core Web Vitals).
+  [À VÉRIFIER : Documentation officielle Hugo Image Render Hooks sur https://gohugo.io/render-hooks/images/]
+-->
+
+{{- $alt := .Text | default "Infrastructure Telemetry Visualization" -}}
+{{- $caption := .Title -}}
+{{- $figClass := index .Attributes "class" | default "telemetry-figure" -}}
+
+<!-- 1. Recherche de l'image dans le Page Bundle (.PageInner compatible shortcodes, avec repli sur .Page) -->
+{{- $image := false -}}
+{{- with .PageInner -}}
+  {{- $image = .Resources.GetMatch $.Destination -}}
+{{- else -}}
+  {{- $image = .Page.Resources.GetMatch .Destination -}}
+{{- end -}}
+
+<!-- 2. Si l'image n'est pas dans le dossier de l'article, recherche dans assets/ -->
+{{- if not $image -}}
+  {{- $image = resources.Get (strings.TrimPrefix "/" .Destination) -}}
+{{- end -}}
+
+<figure class="{{ $figClass }}" style="margin: 2.25rem 0; background-color: #ffffff; border: 1px solid #e2e8f0; border-radius: 12px; padding: 0.75rem; box-shadow: 0 2px 6px rgba(15, 23, 42, 0.04);">
+  {{- if and $image (ne $image.MediaType.SubType "svg") -}}
+    <!-- 3. Image matricielle locale (PNG/JPG/WebP) : redimensionnement 800px et conversion WebP q85 -->
+    {{- $image_webp := $image.Resize "800x webp q85" -}}
+    <picture>
+      <source srcset="{{ $image_webp.RelPermalink }}" type="image/webp">
+      <img src="{{ $image.RelPermalink }}"
+           alt="{{ $alt }}"
+           loading="lazy"
+           decoding="async"
+           width="{{ $image.Width }}"
+           height="{{ $image.Height }}"
+           style="display: block; width: 100%; max-width: 100%; height: auto; border-radius: 8px;">
+    </picture>
+  {{- else if $image -}}
+    <!-- 4. Image vectorielle SVG trouvée dans Page Bundle ou assets/ -->
+    <img src="{{ $image.RelPermalink }}"
+         alt="{{ $alt }}"
+         loading="lazy"
+         decoding="async"
+         width="800"
+         height="450"
+         style="display: block; width: 100%; max-width: 100%; height: auto; border-radius: 8px;">
+  {{- else -}}
+    <!-- 5. Fallback pour les fichiers servis depuis static/images/ (ex: /images/default-cover.svg) -->
+    <img src="{{ .Destination | safeURL }}"
+         alt="{{ $alt }}"
+         loading="lazy"
+         decoding="async"
+         width="800"
+         height="450"
+         style="display: block; width: 100%; max-width: 100%; height: auto; border-radius: 8px;">
+  {{- end -}}
+
+  {{- if $caption -}}
+    <figcaption style="margin-top: 0.65rem; text-align: center; font-size: 0.85rem; color: #64748b; font-weight: 500;">
+      {{ $caption }}
+    </figcaption>
+  {{- end -}}
+</figure>

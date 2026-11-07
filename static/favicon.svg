@@ -1,0 +1,11 @@
+<!-- static/favicon.svg -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512">
+  <!-- Fond Indigo Premium (Bords très arrondis typiques des icônes SaaS/iOS) -->
+  <rect width="512" height="512" rx="112" fill="#4f46e5"/>
+  
+  <!-- Ligne de tendance ascendante représentant l'Uptime / Le Monitoring -->
+  <path d="M128 320l80-80 64 64 112-112" fill="none" stroke="#ffffff" stroke-width="48" stroke-linecap="round" stroke-linejoin="round"/>
+  
+  <!-- Point final : le marqueur de succès (100% Uptime) -->
+  <circle cx="384" cy="192" r="32" fill="#ffffff"/>
+</svg>

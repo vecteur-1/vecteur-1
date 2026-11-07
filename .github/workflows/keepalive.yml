@@ -1,0 +1,52 @@
+# Chemin exact : .github/workflows/keepalive.yml
+name: Vecteur 1 - Keepalive Natif (Anti-Inactivité 60 Jours)
+
+# ---------------------------------------------------------
+# 1. DÉCLENCHEURS (Triggers)
+# ---------------------------------------------------------
+on:
+  # Permet de tester le workflow manuellement depuis l'onglet Actions
+  workflow_dispatch:
+
+  # Exécution le 1er et le 15 de chaque mois à 03:23 UTC (soit tous les ~15 jours,
+  # bien avant la limite fatidique de 60 jours d'inactivité des dépôts publics)
+  schedule:
+    - cron: '23 3 1,15 * *'
+
+# ---------------------------------------------------------
+# 2. PERMISSIONS MINIMALES
+# ---------------------------------------------------------
+# Aucune permission d'écriture sur le code source (contents: read) : aucun commit vide n'est créé.
+# Seule la permission 'actions: write' est accordée pour réactiver les workflows via l'API native.
+permissions:
+  contents: read
+
+concurrency:
+  group: "keepalive-maintenance"
+  cancel-in-progress: false
+
+jobs:
+  keepalive:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    permissions:
+      actions: write
+
+    steps:
+      - name: 🔄 Maintien d'activité des workflows via l'API REST officielle GitHub
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          echo "Vérification et maintien d'activité des workflows planifiés pour ${{ github.repository }}..."
+
+          # [À VÉRIFIER : Endpoint officiel GitHub REST API "Enable a workflow" :
+          # https://docs.github.com/en/rest/actions/workflows#enable-a-workflow ]
+          for WF_FILE in "main.yml" "keepalive.yml"; do
+            echo " Envoi du signal d'activation API pour ${WF_FILE}..."
+            gh api \
+              --method PUT \
+              -H "Accept: application/vnd.github+json" \
+              -H "X-GitHub-Api-Version: 2022-11-28" \
+              "/repos/${{ github.repository }}/actions/workflows/${WF_FILE}/enable"
+            echo "✅ Workflow ${WF_FILE} confirmé actif."
+          done

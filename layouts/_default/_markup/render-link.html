@@ -1,0 +1,15 @@
+<!-- Chemin exact : layouts/_default/_markup/render-link.html -->
+<!-- 
+  Render Hook de liens Hugo :
+  Si le titre du lien Markdown est "sponsored", injecte automatiquement rel="sponsored nofollow"
+  et la classe CSS "vendor-affiliate-link" pour un affichage en lien texte B2B propre.
+-->
+{{- $dest := .Destination | safeURL -}}
+{{- $isSponsored := eq .Title "sponsored" -}}
+{{- $isExternal := or (strings.HasPrefix $dest "http://") (strings.HasPrefix $dest "https://") -}}
+
+{{- if $isSponsored -}}
+<a href="{{ $dest }}" rel="sponsored nofollow" class="vendor-affiliate-link plausible-event-name=Clic+Tableau+Comparatif">{{ .Text | safeHTML }}</a>
+{{- else -}}
+<a href="{{ $dest }}"{{- with .Title }} title="{{ . }}"{{- end -}}{{- if $isExternal }} target="_blank" rel="noopener noreferrer"{{- end -}}>{{ .Text | safeHTML }}</a>
+{{- end -}}

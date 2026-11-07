@@ -1,0 +1,44 @@
+# Chemin exact : hugo.toml
+# Configuration principale du site "Vecteur 1"
+
+baseURL = 'https://uptime-intel.com/'
+title = 'Cloud Observability & Uptime Intel'
+theme = ''
+
+[languages.en]
+  locale = 'en-US'
+  label = 'English'
+
+enableRobotsTXT = true
+
+# Active l'extraction de la date de dernière modification depuis l'historique Git (E-E-A-T)
+enableGitInfo = true
+
+# Désactive la génération des pages de listes inutiles (architecture SEO plate)
+disableKinds = ["taxonomy", "term", "section"]
+
+[permalinks]
+  posts = '/:slug/'
+
+[sitemap]
+  changefreq = 'weekly'
+  priority = 0.5
+  filename = 'sitemap.xml'
+
+[frontmatter]
+  lastmod = [":git", "lastmod", "date", "publishDate"]
+
+# --- CONFIGURATION GOLDMARK (Phase 3 : AST & Sécurité XSS) ---
+[markup]
+  [markup.goldmark]
+    [markup.goldmark.renderer]
+      unsafe = false
+    [markup.goldmark.parser]
+      wrapStandAloneImageWithinParagraph = false
+      [markup.goldmark.parser.attribute]
+        block = true
+        title = true
+
+[params]
+  author = 'Vecteur 1 Intelligence'
+  description = 'Data-driven analysis of uptime monitoring and cloud infrastructure reliability. We track AWS, GCP, and independent monitoring solutions.'

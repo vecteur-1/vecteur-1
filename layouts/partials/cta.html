@@ -1,0 +1,68 @@
+<!-- Chemin exact : layouts/partials/cta.html -->
+<div class="cta-enterprise-card">
+    <div class="cta-enterprise-body">
+        <!-- Panneau Gauche : En-tête de marque groupé (Icône + Badges + Titre) + Description -->
+        <div class="cta-info-group">
+            <div class="cta-brand-head">
+                <div class="cta-icon" aria-hidden="true">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                        <path d="m9 12 2 2 4-4"></path>
+                    </svg>
+                </div>
+
+                <div class="cta-title-group">
+                    <div class="cta-eyebrow-row">
+                        <span class="cta-eyebrow">
+                            <span class="cta-status-dot" aria-hidden="true"></span>
+                            <span>Independent Uptime Layer</span>
+                        </span>
+                        <span class="cta-tag-verified">Recommended Stack</span>
+                    </div>
+                    <h3 class="cta-title">Deploy {{ .Params.outil_cible | default "Better Stack" }}</h3>
+                </div>
+            </div>
+
+            <p class="cta-desc">{{ .Params.proposition_valeur | default "Secure your infrastructure with an independent incident management layer today." }}</p>
+        </div>
+        
+        <!-- Panneau Droit : Zone d'action dédiée + Preuve sociale centrée en colonne -->
+        <div class="cta-action-group">
+            <a href="{{ .Params.lien_affiliation_principal | default "https://betterstack.com/" }}" class="cta-btn-premium plausible-event-name=Clic+CTA" rel="sponsored nofollow">
+                <span>{{ .Params.texte_bouton | default "Start Monitoring Free" }}</span>
+                <span class="arrow">&rarr;</span>
+            </a>
+            
+            <!-- Preuve sociale strictement alignée en colonne sous le bouton -->
+            <div class="cta-trust-signals">
+                <div class="cta-rating-row">
+                    <div class="stars" aria-label="5 out of 5 stars">
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                        <svg viewBox="0 0 24 24"><path d="M12 2l3.09 6.26L22 9.27l-5 4.87 1.18 6.88L12 17.77l-6.18 3.25L7 14.14 2 9.27l6.91-1.01L12 2z"/></svg>
+                    </div>
+                    <span class="cta-score-pill"><strong>{{ .Params.preuve_sociale_note | default "4.8/5" }}</strong> on G2</span>
+                </div>
+                <span class="trust-text">{{ .Params.preuve_sociale_texte | default "Trusted by 50,000+ engineers" }}</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bandeau inférieur de réassurance technique (1 ligne par item sur mobile, 3 colonnes sur 1 ligne dès 640px) -->
+    <div class="cta-enterprise-footer">
+        <span class="cta-feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            30s Multi-Region Checks
+        </span>
+        <span class="cta-feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Slack, PagerDuty &amp; Webhook Alerts
+        </span>
+        <span class="cta-feature-item">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+            Free Tier Available
+        </span>
+    </div>
+</div>

@@ -1,0 +1,1512 @@
+<!-- Chemin exact : layouts/_default/single.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{ partial "head.html" . }}
+
+    <style>
+        /* Palette B2B SaaS Enterprise (Dark Slate, Deep Indigo & Emerald) */
+        :root { 
+            --primary: #4f46e5; 
+            --primary-dark: #4338ca; 
+            --primary-deeper: #3730a3;
+            --primary-light: #e0e7ff;
+            --primary-ultra-light: #eef2ff;
+            --dark-950: #090d16;
+            --dark-900: #0f172a;
+            --dark-800: #1e293b;
+            --text-900: #0f172a; 
+            --text-800: #1e293b;
+            --text-700: #334155;
+            --text-500: #64748b; 
+            --text-400: #94a3b8;
+            --bg-canvas: #f8fafc; /* Fond simple, pur et uni (sans motif) */
+            --bg-body: #f8fafc; 
+            --bg-card: #ffffff;
+            --border-light: #e2e8f0; 
+            --border-dark: #cbd5e1;
+            --emerald: #10b981;
+            --emerald-light: #ecfdf5;
+            --emerald-border: #a7f3d0;
+        }
+        
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* -----------------------------------------------------
+           1. BODY : FOND SIMPLE ET UNI (#f8fafc) & ÉCHELLE 980px
+           ----------------------------------------------------- */
+        body {
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-size: 15.5px;
+            line-height: 1.7;
+            color: var(--text-700);
+            background-color: var(--bg-canvas);
+            background-image: none;
+            margin: 0;
+            padding: 0;
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+        
+        a { color: var(--primary); text-decoration: none; font-weight: 600; transition: all 0.2s ease; }
+        a:hover { color: var(--primary-dark); }
+        
+        /* -----------------------------------------------------
+           2. NAVIGATION SOMBRE INTÉGRÉE AU HERO (Largeur 980px)
+           ----------------------------------------------------- */
+        .site-header {
+            background-color: rgba(9, 13, 22, 0.92);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0.95rem 1.15rem;
+        }
+        @media (min-width: 640px) {
+            .nav-inner {
+                padding: 1rem 1.5rem;
+            }
+        }
+        .site-brand {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffffff !important;
+            letter-spacing: -0.025em;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+        @media (min-width: 640px) {
+            .site-brand {
+                font-size: 1.1rem;
+            }
+        }
+        .brand-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #818cf8, #38bdf8);
+            box-shadow: 0 0 10px rgba(129, 140, 248, 0.85);
+            flex-shrink: 0;
+        }
+        .nav-links { display: flex; gap: 1.85rem; }
+        .nav-links a { color: #cbd5e1; font-size: 0.89rem; font-weight: 500; }
+        .nav-links a:hover { color: #ffffff; }
+
+        /* -----------------------------------------------------
+           3. SECTION.REPORT-HERO (980px)
+           Adaptée pour Mobile (360px-440px), iPad Mini (768px) et Desktop (880px+)
+           ----------------------------------------------------- */
+        .report-hero {
+            background-color: var(--dark-900);
+            background-image: 
+                radial-gradient(ellipse 75% 85% at 50% -20%, rgba(79, 70, 229, 0.34), transparent),
+                radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.12), transparent 45%);
+            border-bottom: 1px solid var(--dark-800);
+            padding: 2.15rem 1rem 4.35rem;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        @media (min-width: 640px) {
+            .report-hero {
+                padding: 2.75rem 1.25rem 5rem;
+            }
+        }
+        @media (min-width: 880px) {
+            .report-hero {
+                padding: 3rem 1.5rem 5.25rem;
+            }
+        }
+        .report-hero-inner {
+            max-width: 980px;
+            margin: 0 auto;
+            width: 100%;
+        }
+
+        /* Badge supérieur : 1 seule ligne garantie sur mobile et desktop */
+        .report-breadcrumb {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.64rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #e0e7ff;
+            background-color: rgba(79, 70, 229, 0.24);
+            border: 1px solid rgba(129, 140, 248, 0.4);
+            padding: 0.28rem 0.75rem;
+            border-radius: 9999px;
+            margin-bottom: 0.95rem;
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .breadcrumb-service {
+            display: none;
+        }
+        @media (min-width: 640px) {
+            .report-breadcrumb {
+                font-size: 0.7rem;
+                letter-spacing: 0.07em;
+                padding: 0.32rem 0.9rem;
+                margin-bottom: 1.1rem;
+            }
+            .breadcrumb-service {
+                display: inline;
+            }
+        }
+        .report-breadcrumb svg {
+            width: 12.5px;
+            height: 12.5px;
+            color: #818cf8;
+            flex-shrink: 0;
+        }
+
+        /* Titre H1 calibré par palier : Mobile -> Tablette (768px) -> Desktop (880px+) */
+        .report-hero h1 {
+            font-size: clamp(1.72rem, 5.2vw, 2.1rem);
+            line-height: 1.15;
+            margin: 0 0 1.05rem 0;
+            letter-spacing: -0.03em;
+            color: #ffffff;
+            font-weight: 800;
+            max-width: 920px;
+        }
+        @media (min-width: 640px) {
+            .report-hero h1 {
+                font-size: 2.3rem;
+                line-height: 1.12;
+                margin: 0 0 1.25rem 0;
+                letter-spacing: -0.034em;
+            }
+        }
+        @media (min-width: 880px) {
+            .report-hero h1 {
+                font-size: clamp(2.5rem, 4vw, 3.15rem);
+                line-height: 1.12;
+                margin: 0 0 1.35rem 0;
+                letter-spacing: -0.035em;
+            }
+        }
+
+        /* Pilules de métadonnées : Published & Updated côte à côte dès 360px */
+        .meta-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.45rem;
+            margin: 0 0 1.35rem 0;
+        }
+        @media (min-width: 640px) {
+            .meta-group {
+                gap: 0.65rem;
+                margin: 0 0 1.65rem 0;
+            }
+        }
+        .meta-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background-color: rgba(30, 41, 59, 0.78);
+            border: 1px solid rgba(255, 255, 255, 0.14);
+            padding: 0.28rem 0.65rem;
+            border-radius: 9999px;
+            font-size: 0.72rem;
+            color: #e2e8f0;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        @media (min-width: 640px) {
+            .meta-pill {
+                gap: 0.42rem;
+                padding: 0.35rem 0.85rem;
+                font-size: 0.78rem;
+            }
+        }
+        .meta-pill svg {
+            width: 12px;
+            height: 12px;
+            color: #818cf8;
+            flex-shrink: 0;
+        }
+        @media (min-width: 640px) {
+            .meta-pill svg {
+                width: 13px;
+                height: 13px;
+            }
+        }
+
+        /* Grille de 4 cartes KPI verrouillée avec minmax(0, 1fr) (Zéro débordement & Zéro label coupé à 768px) */
+        .hero-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.65rem;
+            width: 100%;
+        }
+        @media (min-width: 740px) {
+            .hero-kpi-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                gap: 0.7rem;
+            }
+        }
+        @media (min-width: 880px) {
+            .hero-kpi-grid {
+                gap: 1rem;
+            }
+        }
+        .hero-kpi-card {
+            min-width: 0;
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.78) 0%, rgba(15, 23, 42, 0.92) 100%);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 11px;
+            padding: 0.75rem 0.8rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 0.26rem;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 16px -6px rgba(0, 0, 0, 0.35);
+        }
+        @media (min-width: 880px) {
+            .hero-kpi-card {
+                padding: 0.85rem 1.1rem;
+            }
+        }
+        .hero-kpi-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.045em;
+            color: #94a3b8;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.2;
+        }
+        @media (min-width: 880px) {
+            .hero-kpi-label {
+                font-size: 0.66rem;
+                letter-spacing: 0.055em;
+            }
+        }
+        .hero-kpi-value {
+            font-size: 0.84rem;
+            line-height: 1.28;
+            color: #ffffff;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.38rem;
+            min-width: 0;
+            overflow-wrap: break-word;
+            word-break: break-word;
+        }
+        @media (min-width: 880px) {
+            .hero-kpi-value {
+                font-size: 0.91rem;
+            }
+        }
+        .kpi-dot-live {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background-color: var(--emerald);
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.9);
+            flex-shrink: 0;
+        }
+
+        /* -----------------------------------------------------
+           4. FEUILLE DE RAPPORT CENTRÉE (Largeur 980px)
+           ----------------------------------------------------- */
+        .report-main-container {
+            max-width: 980px;
+            margin: -3.15rem auto 4.5rem;
+            padding: 0 0.85rem;
+            position: relative;
+            z-index: 10;
+        }
+        @media (min-width: 640px) {
+            .report-main-container {
+                margin: -3.25rem auto 4.5rem;
+                padding: 0 1.25rem;
+            }
+        }
+
+        .article-sheet {
+            background-color: var(--bg-card);
+            border-radius: 20px;
+            padding: 1.5rem 1.1rem;
+            border: 1px solid var(--border-light);
+            box-shadow: 
+                0 16px 40px -14px rgba(15, 23, 42, 0.07),
+                0 2px 6px rgba(15, 23, 42, 0.02);
+        }
+
+        @media (min-width: 640px) {
+            .article-sheet {
+                padding: 2.25rem 1.75rem;
+            }
+        }
+
+        @media (min-width: 880px) {
+            .article-sheet {
+                padding: 2.85rem 3.5rem;
+            }
+        }
+
+        /* -----------------------------------------------------
+           5. TYPOGRAPHIE RECALIBRÉE POUR 980px (Precision SaaS)
+           ----------------------------------------------------- */
+        article h2 {
+            font-size: 1.42rem;
+            line-height: 1.3;
+            margin: 3rem 0 1.1rem 0;
+            padding: 0.12rem 0 0.12rem 0.9rem;
+            border-left: 3.5px solid var(--primary);
+            color: var(--text-900);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+        }
+        article h3 {
+            font-size: 1.12rem;
+            color: var(--text-900);
+            margin: 2.25rem 0 0.8rem 0;
+            font-weight: 700;
+            letter-spacing: -0.01em;
+        }
+        article p {
+            font-size: 0.98rem;
+            line-height: 1.75;
+            margin: 0 0 1.25rem 0;
+            color: var(--text-700);
+        }
+        article strong {
+            color: var(--text-900);
+            font-weight: 600;
+        }
+        article hr {
+            border: 0;
+            height: 1px;
+            background: linear-gradient(90deg, transparent 0%, var(--border-dark) 50%, transparent 100%);
+            margin: 2.5rem 0;
+        }
+
+        /* Cadre de l'image de télémétrie (.telemetry-figure) */
+        .telemetry-figure {
+            margin: 2rem 0 2.5rem 0 !important;
+            background-color: var(--bg-body) !important;
+            border: 1px solid var(--border-light) !important;
+            border-radius: 15px !important;
+            padding: 0.6rem !important;
+            box-shadow: 0 6px 20px -6px rgba(15, 23, 42, 0.05) !important;
+        }
+        .telemetry-figure img {
+            border-radius: 10px !important;
+            max-height: 370px;
+            object-fit: cover;
+        }
+        .telemetry-figure figcaption {
+            font-size: 0.8rem !important;
+            color: var(--text-500) !important;
+            margin-top: 0.55rem !important;
+        }
+
+        /* -----------------------------------------------------
+           6. BLOCKQUOTE : GRILLE BENTO 2x2 CALIBRÉE
+           ----------------------------------------------------- */
+        article blockquote {
+            margin: 1.35rem 0 2.5rem 0;
+            padding: 1.35rem;
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid var(--border-dark);
+            border-radius: 15px;
+            box-shadow: 0 6px 20px -6px rgba(15, 23, 42, 0.05);
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+            position: relative;
+        }
+        article blockquote::before {
+            content: "EXECUTIVE TELEMETRY BRIEF — KEY FINDINGS";
+            grid-column: 1 / -1;
+            font-size: 0.7rem;
+            font-weight: 800;
+            letter-spacing: 0.08em;
+            color: var(--primary);
+            padding-bottom: 0.6rem;
+            margin-bottom: 0.1rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+        @media (min-width: 768px) {
+            article blockquote {
+                grid-template-columns: repeat(2, 1fr);
+                gap: 1.05rem;
+                padding: 1.5rem 1.65rem;
+            }
+        }
+        article blockquote p {
+            margin: 0 !important;
+            padding: 1.05rem 1.2rem;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 11px;
+            font-size: 0.9rem !important;
+            line-height: 1.62 !important;
+            color: var(--text-700);
+            box-shadow: 0 1px 3px rgba(15, 23, 42, 0.02);
+            transition: border-color 0.2s ease, transform 0.2s ease;
+        }
+        article blockquote p:hover {
+            border-color: #a5b4fc;
+            transform: translateY(-1px);
+        }
+        article blockquote p strong {
+            display: inline-block;
+            font-size: 0.7rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--primary-dark);
+            background-color: var(--primary-ultra-light);
+            border: 1px solid #c7d2fe;
+            padding: 0.14rem 0.52rem;
+            border-radius: 5px;
+            margin-bottom: 0.5rem;
+        }
+
+        /* -----------------------------------------------------
+           7. TABLEAUX PLEINE LARGEUR & LIENS TEXTE D'AFFILIATION
+           ----------------------------------------------------- */
+        article table {
+            display: table;
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            margin: 1.5rem 0 2.25rem 0;
+            border: 1px solid var(--border-dark);
+            border-radius: 13px;
+            overflow: hidden;
+            box-shadow: 0 2px 8px rgba(15, 23, 42, 0.025);
+            background-color: var(--bg-card);
+        }
+        article th {
+            position: sticky;
+            top: 0;
+            z-index: 10;
+            background-color: #f1f5f9;
+            padding: 0.85rem 1.25rem;
+            text-align: left;
+            color: var(--text-900);
+            font-weight: 800;
+            font-size: 0.73rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            border-bottom: 1px solid var(--border-dark);
+        }
+        article td {
+            padding: 0.9rem 1.25rem;
+            border-bottom: 1px solid var(--border-light);
+            color: var(--text-700);
+            font-size: 0.92rem;
+            background-color: var(--bg-card);
+            transition: background-color 0.15s ease;
+            vertical-align: middle;
+        }
+        article td:first-child {
+            font-weight: 600;
+            color: var(--text-900);
+        }
+        article tr:hover td {
+            background-color: var(--bg-body);
+        }
+        article tr:last-child td { border-bottom: none; }
+
+        /* 1. Liens vers les sources d'incidents ("Official Report") -> Style Bouton-Badge */
+        article td a:not(.vendor-affiliate-link) {
+            display: inline-flex;
+            align-items: center;
+            background-color: var(--primary-ultra-light);
+            color: var(--primary) !important;
+            border: 1px solid #c7d2fe;
+            padding: 0.2rem 0.65rem;
+            border-radius: 6px;
+            font-size: 0.78rem;
+            font-weight: 700;
+        }
+        article td a:not(.vendor-affiliate-link):hover {
+            background-color: var(--primary);
+            color: #ffffff !important;
+            border-color: var(--primary);
+        }
+
+        /* 2. Liens d'affiliation texte ("Better Stack", "StatusCake") dans le tableau comparatif */
+        article td a.vendor-affiliate-link,
+        article td a.vendor-affiliate-link strong {
+            color: var(--primary) !important;
+            font-weight: 700;
+            font-size: 0.93rem;
+            text-decoration: underline;
+            text-decoration-color: rgba(79, 70, 229, 0.35);
+            text-underline-offset: 3px;
+            transition: color 0.2s ease, text-decoration-color 0.2s ease;
+        }
+        article td a.vendor-affiliate-link:hover,
+        article td a.vendor-affiliate-link:hover strong {
+            color: var(--primary-dark) !important;
+            text-decoration-color: var(--primary-dark);
+        }
+
+        @media (max-width: 639px) {
+            article table {
+                display: block;
+                overflow-x: auto;
+                white-space: nowrap;
+            }
+        }
+
+        /* -----------------------------------------------------
+           8. TIMELINE SRE PLEINE LARGEUR (Échelle 980px)
+           ----------------------------------------------------- */
+        article h4 {
+            display: block;
+            font-size: 0.95rem;
+            color: var(--text-900);
+            background-color: var(--bg-body);
+            border: 1px solid var(--border-dark);
+            border-left: 3.5px solid var(--primary);
+            border-radius: 9px;
+            padding: 0.75rem 1.1rem;
+            margin: 1.65rem 0 0.75rem 0;
+            font-weight: 700;
+            line-height: 1.5;
+        }
+        article h4 a {
+            display: inline-block;
+            font-size: 0.75rem;
+            background-color: var(--primary-ultra-light);
+            border: 1px solid #c7d2fe;
+            padding: 0.1rem 0.55rem;
+            border-radius: 5px;
+            color: var(--primary);
+            font-weight: 700;
+            margin: 0 0.15rem;
+        }
+        article h4 a:hover {
+            background-color: var(--primary);
+            color: #ffffff;
+            border-color: var(--primary);
+        }
+
+        article ul {
+            list-style: none;
+            margin: 0.45rem 0 2rem 0.7rem;
+            padding: 0.2rem 0 0.2rem 1.4rem;
+            border-left: 2px solid var(--primary-light);
+        }
+        article ul li {
+            position: relative;
+            margin-bottom: 0.75rem;
+            font-size: 0.91rem;
+            line-height: 1.62;
+            color: var(--text-700);
+            background-color: var(--bg-body);
+            padding: 0.7rem 1.05rem;
+            border: 1px solid var(--border-light);
+            border-radius: 9px;
+            transition: border-color 0.2s ease;
+        }
+        article ul li:hover {
+            border-color: var(--border-dark);
+        }
+        article ul li:last-child { margin-bottom: 0; }
+        article ul li::before {
+            content: '';
+            position: absolute;
+            left: -1.86rem;
+            top: 0.98rem;
+            width: 9px;
+            height: 9px;
+            border-radius: 9999px;
+            background-color: var(--bg-card);
+            border: 2px solid var(--primary);
+        }
+        article code {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            background-color: var(--primary-ultra-light);
+            border: 1px solid #c7d2fe;
+            padding: 0.14rem 0.48rem;
+            border-radius: 5px;
+            letter-spacing: 0.03em;
+        }
+        
+        /* -----------------------------------------------------
+           9. COMPOSANT CTA : div.cta-enterprise-card
+           ----------------------------------------------------- */
+        .cta-enterprise-card { 
+            background: var(--bg-card); 
+            border: 1px solid #a5b4fc; 
+            border-radius: 15px; 
+            box-shadow: 
+                0 10px 28px -8px rgba(79, 70, 229, 0.12),
+                0 2px 5px rgba(15, 23, 42, 0.03); 
+            margin: 0 0 2.5rem 0; 
+            position: relative;
+            overflow: hidden;
+            transition: border-color 0.25s ease, box-shadow 0.25s ease;
+        }
+        .cta-enterprise-card:hover {
+            border-color: var(--primary);
+            box-shadow: 
+                0 16px 34px -8px rgba(79, 70, 229, 0.18),
+                0 4px 8px rgba(15, 23, 42, 0.04);
+        }
+        .cta-enterprise-body {
+            display: flex;
+            flex-direction: column;
+            width: 100%;
+        }
+        .cta-info-group {
+            padding: 1.35rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            flex: 1 1 0%;
+            min-width: 0;
+        }
+        .cta-brand-head {
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            min-width: 0;
+        }
+        .cta-icon {
+            flex-shrink: 0;
+            width: 42px;
+            height: 42px;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: #ffffff;
+            border-radius: 11px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 4px 12px rgba(79, 70, 229, 0.24);
+        }
+        .cta-icon svg { width: 20px; height: 20px; }
+        .cta-title-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.22rem;
+            min-width: 0;
+            flex: 1;
+        }
+        .cta-eyebrow-row {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            gap: 0.3rem 0.5rem;
+            width: 100%;
+        }
+        .cta-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary);
+            white-space: nowrap;
+        }
+        .cta-status-dot {
+            width: 6.5px;
+            height: 6.5px;
+            border-radius: 9999px;
+            background-color: var(--emerald);
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.2);
+            flex-shrink: 0;
+        }
+        .cta-tag-verified {
+            font-size: 0.63rem;
+            font-weight: 700;
+            color: #047857;
+            background-color: var(--emerald-light);
+            border: 1px solid var(--emerald-border);
+            padding: 0.06rem 0.45rem;
+            border-radius: 9999px;
+            white-space: nowrap;
+            line-height: 1.3;
+        }
+        .cta-title {
+            font-size: 1.2rem;
+            color: var(--text-900);
+            margin: 0;
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.2;
+        }
+        .cta-desc {
+            font-size: 0.89rem !important;
+            color: var(--text-500) !important;
+            margin: 0 !important;
+            line-height: 1.52 !important;
+        }
+
+        /* Panneau d'action droit teinté */
+        .cta-action-group {
+            background: linear-gradient(180deg, #f8fafc 0%, #eef2ff 100%);
+            border-top: 1px solid #e0e7ff;
+            padding: 1.2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.65rem;
+            width: 100%;
+            box-sizing: border-box;
+        }
+        .cta-btn-premium { 
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.42rem;
+            width: 100%;
+            background: linear-gradient(180deg, var(--primary) 0%, var(--primary-dark) 100%); 
+            color: #ffffff !important; 
+            padding: 0.76rem 1.15rem;
+            border-radius: 9px;
+            text-decoration: none !important; 
+            font-weight: 700;
+            font-size: 0.88rem;
+            letter-spacing: -0.01em;
+            transition: all 0.2s cubic-bezier(0.4, 0, 0.2, 1); 
+            border: 1px solid var(--primary-deeper);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.25), 0 4px 12px rgba(79, 70, 229, 0.28);
+            white-space: nowrap;
+        }
+        .cta-btn-premium:hover {
+            background: linear-gradient(180deg, #5b54f0 0%, var(--primary-dark) 100%);
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.3), 0 6px 14px rgba(79, 70, 229, 0.4);
+            transform: translateY(-1px);
+        }
+        .cta-btn-premium:focus-visible { outline: 3px solid #c7d2fe; outline-offset: 2px; }
+        .cta-btn-premium .arrow { transition: transform 0.2s ease; font-size: 1.05em; }
+        .cta-btn-premium:hover .arrow { transform: translateX(4px); }
+
+        .cta-trust-signals {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 3px;
+            width: 100%;
+        }
+        .cta-rating-row {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.38rem;
+        }
+        .stars { display: flex; gap: 2px; color: #f59e0b; flex-shrink: 0; }
+        .stars svg { width: 12.5px; height: 12.5px; fill: currentColor; }
+        .cta-score-pill {
+            font-size: 0.69rem;
+            color: var(--text-700);
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            padding: 0.04rem 0.38rem;
+            border-radius: 5px;
+            font-weight: 500;
+            white-space: nowrap;
+        }
+        .cta-score-pill strong { color: var(--text-900); font-weight: 700; }
+        .trust-text {
+            font-size: 0.69rem;
+            color: var(--text-500);
+            font-weight: 600;
+            text-align: center;
+            white-space: nowrap;
+        }
+
+        /* Bandeau inférieur de 3 garanties */
+        .cta-enterprise-footer {
+            background-color: var(--bg-body);
+            border-top: 1px solid var(--border-light);
+            padding: 0.72rem 1.2rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.48rem;
+            font-size: 0.74rem;
+            color: var(--text-700);
+            font-weight: 600;
+        }
+        .cta-feature-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.36rem;
+            white-space: nowrap;
+        }
+        .cta-feature-item svg {
+            width: 13px;
+            height: 13px;
+            color: var(--emerald);
+            flex-shrink: 0;
+        }
+
+        @media (min-width: 640px) {
+            .cta-enterprise-footer {
+                grid-template-columns: repeat(3, auto);
+                justify-content: space-between;
+                padding: 0.7rem 1.4rem;
+                gap: 0.5rem 0.75rem;
+            }
+        }
+
+        /* Palier Tablette (iPad Mini 768px) */
+        @media (min-width: 740px) {
+            .cta-enterprise-body {
+                flex-direction: row;
+                align-items: stretch;
+            }
+            .cta-info-group {
+                padding: 1.35rem 1.35rem;
+                justify-content: center;
+            }
+            .cta-action-group {
+                flex: 0 0 225px;
+                width: 225px;
+                border-top: none;
+                border-left: 1px solid #e0e7ff;
+                padding: 1.25rem 1.15rem;
+            }
+            .cta-enterprise-footer {
+                padding: 0.7rem 1.35rem;
+            }
+        }
+
+        /* Palier Grand Écran (880px+) */
+        @media (min-width: 880px) {
+            .cta-info-group {
+                padding: 1.55rem 1.85rem;
+            }
+            .cta-icon {
+                width: 46px;
+                height: 46px;
+            }
+            .cta-icon svg {
+                width: 22px;
+                height: 22px;
+            }
+            .cta-title {
+                font-size: 1.28rem;
+            }
+            .cta-action-group {
+                flex: 0 0 255px;
+                width: 255px;
+                padding: 1.5rem 1.5rem;
+            }
+            .cta-btn-premium {
+                font-size: 0.92rem;
+                padding: 0.8rem 1.35rem;
+            }
+            .cta-score-pill,
+            .trust-text {
+                font-size: 0.71rem;
+            }
+            .cta-enterprise-footer {
+                padding: 0.72rem 1.85rem;
+                font-size: 0.76rem;
+            }
+        }
+
+        /* -----------------------------------------------------
+           10. SECTION.METHODOLOGY-STRIP (3 Colonnes E-E-A-T sans bordure pincée)
+           ----------------------------------------------------- */
+        .methodology-strip {
+            margin: 2.75rem 0;
+            padding: 1.5rem 1.25rem;
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid var(--border-dark);
+            border-radius: 15px;
+        }
+        @media (min-width: 640px) {
+            .methodology-strip {
+                padding: 1.65rem 1.75rem;
+            }
+        }
+        .methodology-strip-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.65rem;
+            padding-bottom: 1rem;
+            margin-bottom: 1.2rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .methodology-strip-header-left {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            font-size: 0.74rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            color: var(--text-900);
+        }
+        .methodology-strip-header svg {
+            width: 16px;
+            height: 16px;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+        .methodology-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.1rem;
+        }
+        @media (min-width: 740px) {
+            .methodology-grid {
+                grid-template-columns: repeat(3, 1fr);
+            }
+        }
+        .methodology-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-light);
+            border-radius: 12px;
+            padding: 1.2rem 1.25rem;
+            box-shadow: 0 2px 5px rgba(15, 23, 42, 0.02);
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+        }
+        .methodology-card:hover {
+            transform: translateY(-2px);
+            border-color: #a5b4fc;
+            box-shadow: 0 8px 18px -6px rgba(15, 23, 42, 0.06);
+        }
+        .methodology-card h4 {
+            margin: 0 0 0.5rem 0;
+            padding: 0;
+            border: none;
+            background: transparent;
+            font-size: 0.92rem;
+            font-weight: 800;
+            color: var(--text-900);
+            display: flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+        .methodology-card h4 svg {
+            width: 17px;
+            height: 17px;
+            color: var(--emerald);
+            background-color: var(--emerald-light);
+            border: 1px solid var(--emerald-border);
+            padding: 2px;
+            border-radius: 5px;
+            flex-shrink: 0;
+        }
+        .methodology-card p {
+            margin: 0;
+            font-size: 0.83rem;
+            line-height: 1.58;
+            color: var(--text-500);
+        }
+
+        /* -----------------------------------------------------
+           11. SECTION.CROSS-SELL-SECTION
+           ----------------------------------------------------- */
+        .cross-sell-section {
+            margin-top: 2.75rem;
+            border-top: 1px solid var(--border-light);
+            padding-top: 2.5rem;
+        }
+        .cross-sell-eyebrow {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.65rem;
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+            color: var(--primary);
+            background-color: var(--primary-ultra-light);
+            border: 1px solid #c7d2fe;
+            padding: 0.26rem 0.72rem;
+            border-radius: 9999px;
+            margin-bottom: 0.7rem;
+            max-width: 100%;
+            white-space: nowrap;
+        }
+        @media (min-width: 640px) {
+            .cross-sell-eyebrow {
+                font-size: 0.7rem;
+                letter-spacing: 0.06em;
+                padding: 0.28rem 0.85rem;
+            }
+        }
+        .cross-sell-eyebrow svg {
+            width: 12px;
+            height: 12px;
+            flex-shrink: 0;
+        }
+        .cross-sell-header { margin-bottom: 1.35rem; }
+        .cross-sell-header h3 {
+            font-size: 1.3rem;
+            color: var(--text-900);
+            margin: 0 0 0.3rem 0;
+            letter-spacing: -0.02em;
+            font-weight: 800;
+            line-height: 1.25;
+        }
+        @media (min-width: 640px) {
+            .cross-sell-header h3 {
+                font-size: 1.38rem;
+            }
+        }
+        .cross-sell-header p {
+            font-size: 0.9rem;
+            color: var(--text-500);
+            margin: 0;
+            line-height: 1.55;
+        }
+        
+        .cross-sell-grid { display: flex; flex-direction: column; gap: 1.1rem; }
+        .cross-sell-card {
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-dark);
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            box-shadow: 0 4px 14px -4px rgba(15, 23, 42, 0.05);
+        }
+        .cross-sell-card:hover {
+            transform: translateY(-2px);
+            border-color: var(--primary);
+            box-shadow: 0 12px 26px -8px rgba(79, 70, 229, 0.14);
+        }
+        .cross-sell-body {
+            display: flex;
+            flex-direction: column;
+        }
+        .cross-sell-main {
+            padding: 1.35rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 0.85rem;
+            flex: 1 1 0%;
+            min-width: 0;
+        }
+        .cross-sell-brand-head {
+            display: flex;
+            align-items: center;
+            gap: 0.85rem;
+            min-width: 0;
+        }
+        .cross-sell-icon {
+            flex-shrink: 0;
+            width: 44px;
+            height: 44px;
+            border-radius: 11px;
+            background: linear-gradient(135deg, var(--primary-ultra-light) 0%, var(--primary-light) 100%);
+            border: 1px solid #c7d2fe;
+            color: var(--primary);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            box-shadow: 0 2px 6px rgba(79, 70, 229, 0.08);
+        }
+        .cross-sell-icon svg { width: 21px; height: 21px; }
+        .cross-sell-title-group {
+            display: flex;
+            flex-direction: column;
+            align-items: flex-start;
+            gap: 0.25rem;
+            min-width: 0;
+        }
+        @media (min-width: 520px) {
+            .cross-sell-title-group {
+                flex-direction: row;
+                flex-wrap: wrap;
+                align-items: center;
+                gap: 0.6rem;
+            }
+        }
+        .cross-sell-card h4 {
+            margin: 0;
+            padding: 0;
+            border: none;
+            background: transparent;
+            color: var(--text-900);
+            font-size: 1.14rem;
+            font-weight: 800;
+            letter-spacing: -0.015em;
+            line-height: 1.2;
+        }
+        .cross-sell-badge {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            background-color: var(--primary-ultra-light);
+            border: 1px solid #c7d2fe;
+            padding: 0.14rem 0.55rem;
+            border-radius: 6px;
+            line-height: 1.3;
+        }
+        .cross-sell-card p {
+            margin: 0 !important;
+            font-size: 0.9rem !important;
+            color: var(--text-700) !important;
+            line-height: 1.55 !important;
+        }
+
+        .cross-sell-cta-wrap {
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+            border-top: 1px solid var(--border-light);
+            padding: 1.15rem 1.2rem;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 0.35rem;
+            flex-shrink: 0;
+        }
+        .cross-sell-btn {
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.45rem;
+            width: 100%;
+            padding: 0.76rem 1.25rem;
+            background-color: var(--dark-900);
+            color: #ffffff !important;
+            border: 1px solid var(--dark-800);
+            border-radius: 9px;
+            font-size: 0.88rem;
+            font-weight: 700;
+            text-decoration: none !important;
+            transition: all 0.2s ease;
+            box-shadow: 0 2px 6px rgba(15, 23, 42, 0.12);
+            white-space: nowrap;
+        }
+        .cross-sell-card:hover .cross-sell-btn,
+        .cross-sell-btn:hover {
+            background-color: var(--primary);
+            border-color: var(--primary-dark);
+            color: #ffffff !important;
+            box-shadow: 0 6px 14px rgba(79, 70, 229, 0.25);
+        }
+        .cross-sell-btn .arrow { display: inline-block; transition: transform 0.2s ease; }
+        .cross-sell-card:hover .cross-sell-btn .arrow,
+        .cross-sell-btn:hover .arrow { transform: translateX(4px); }
+        .cross-sell-cta-note {
+            font-size: 0.68rem;
+            color: var(--text-500);
+            font-weight: 600;
+            white-space: nowrap;
+        }
+
+        .cross-sell-specs {
+            background-color: var(--bg-body);
+            border-top: 1px solid var(--border-light);
+            padding: 0.75rem 1.2rem;
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 0.5rem;
+            font-size: 0.75rem;
+            color: var(--text-700);
+            font-weight: 600;
+        }
+        .cross-sell-spec-item {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.38rem;
+            white-space: nowrap;
+        }
+        .cross-sell-spec-item svg {
+            width: 13.5px;
+            height: 13.5px;
+            color: var(--emerald);
+            flex-shrink: 0;
+        }
+
+        @media (min-width: 640px) {
+            .cross-sell-specs {
+                grid-template-columns: repeat(3, auto);
+                justify-content: space-between;
+                padding: 0.7rem 1.4rem;
+                gap: 0.5rem 0.75rem;
+            }
+        }
+
+        @media (min-width: 740px) {
+            .cross-sell-body {
+                flex-direction: row;
+                align-items: stretch;
+            }
+            .cross-sell-main {
+                padding: 1.4rem 1.4rem;
+            }
+            .cross-sell-cta-wrap {
+                flex: 0 0 215px;
+                width: 215px;
+                border-top: none;
+                border-left: 1px solid var(--border-light);
+                padding: 1.35rem 1.2rem;
+            }
+            .cross-sell-specs {
+                padding: 0.72rem 1.4rem;
+            }
+        }
+
+        @media (min-width: 880px) {
+            .cross-sell-main {
+                padding: 1.55rem 1.85rem;
+            }
+            .cross-sell-cta-wrap {
+                flex: 0 0 235px;
+                width: 235px;
+                padding: 1.5rem 1.5rem;
+            }
+            .cross-sell-specs {
+                padding: 0.72rem 1.85rem;
+            }
+        }
+
+        /* -----------------------------------------------------
+           12. MENTION LÉGALE GLOBALE
+           ----------------------------------------------------- */
+        .disclosure-global {
+            background-color: var(--bg-body);
+            border: 1px solid var(--border-dark);
+            border-left: 3.5px solid var(--text-500);
+            padding: 1.05rem 1.3rem;
+            font-size: 0.84rem;
+            border-radius: 9px;
+            margin: 2.25rem 0;
+            line-height: 1.58;
+            color: var(--text-500);
+            display: flex;
+            gap: 0.8rem;
+            align-items: flex-start;
+        }
+        .disclosure-global svg { width: 17px; height: 17px; color: var(--text-500); flex-shrink: 0; margin-top: 2px; }
+        
+        /* Media query Mobile strictement sous 640px */
+        @media (max-width: 639px) {
+            .nav-links { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 1. Navigation Sombre Glassmorphism (980px) -->
+    <header class="site-header">
+        <div class="nav-inner">
+            <a href="/" class="site-brand">
+                <span class="brand-dot" aria-hidden="true"></span>
+                <span>{{ .Site.Title }}</span>
+            </a>
+            <nav class="nav-links">
+                <a href="/">Latest Reports</a>
+                {{ range where .Site.RegularPages "Section" "legal" }}
+                <a href="{{ .RelPermalink }}">{{ .Title }}</a>
+                {{ end }}
+            </nav>
+        </div>
+    </header>
+
+    <!-- 2. Bannière Hero "Dark Slate" Pleine Largeur (Conteneur interne 980px) -->
+    <section class="report-hero">
+        <div class="report-hero-inner">
+            <div class="report-breadcrumb">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                <span>Infrastructure Reliability Report<span class="breadcrumb-service"> &bull; {{ .Params.keyword | default "Cloud Telemetry" }}</span></span>
+            </div>
+
+            <h1>{{ .Title }}</h1>
+            
+            <div class="meta-group">
+                <div class="meta-pill">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>
+                    <span>Published: {{ .Date.Format "Jan 2, 2006" }}</span>
+                </div>
+                {{ if and .Lastmod (ne .Date .Lastmod) }}
+                <div class="meta-pill">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="23 4 23 10 17 10"></polyline><polyline points="1 20 1 14 7 14"></polyline><path d="M3.51 9a9 9 0 0 1 14.85-3.36L23 10M1 14l4.64 4.36A9 9 0 0 0 20.49 15"></path></svg>
+                    <span>Updated: {{ .Lastmod.Format "Jan 2, 2006" }}</span>
+                </div>
+                {{ end }}
+                <div class="meta-pill">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path></svg>
+                    <span>Verified Public Status Feeds</span>
+                </div>
+            </div>
+
+            <!-- Grille de 4 cartes KPI horizontales -->
+            <div class="hero-kpi-grid">
+                <div class="hero-kpi-card">
+                    <span class="hero-kpi-label">Telemetry Feed</span>
+                    <span class="hero-kpi-value"><span class="kpi-dot-live"></span><span>Verified API</span></span>
+                </div>
+                <div class="hero-kpi-card">
+                    <span class="hero-kpi-label">Target Service</span>
+                    <span class="hero-kpi-value"><span>{{ .Params.keyword | default "Cloud Platform" }}</span></span>
+                </div>
+                <div class="hero-kpi-card">
+                    <span class="hero-kpi-label">90-Day Audit Window</span>
+                    <span class="hero-kpi-value"><span>{{ if .Params.tracked_incidents_count }}{{ .Params.tracked_incidents_count }} Tracked Events{{ else }}Active Monitoring{{ end }}</span></span>
+                </div>
+                <div class="hero-kpi-card">
+                    <span class="hero-kpi-label">Recommended Stack</span>
+                    <span class="hero-kpi-value"><span>{{ .Params.outil_cible | default "Better Stack" }}</span></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Conteneur Principal Symétrique (980px) -->
+    <main class="report-main-container">
+        <div class="article-sheet">
+            <article>
+                <!-- PREMIER CTA : Ligne de flottaison -->
+                {{ partial "cta.html" . }}
+
+                <!-- Contenu Markdown (Image, Blockquote Bento 2x2, Tableaux 100%, Timeline SRE) -->
+                {{ .Content }}
+
+                <!-- SECOND CTA : Conclusion de l'article -->
+                <div style="margin-top: 2.5rem;">
+                    {{ partial "cta.html" . }}
+                </div>
+
+                <!-- Bandeau Horizontal de Méthodologie E-E-A-T (3 Colonnes symétriques) -->
+                <section class="methodology-strip" aria-label="Verification Methodology">
+                    <div class="methodology-strip-header">
+                        <span class="methodology-strip-header-left">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                            <span>Data Integrity &amp; Verification Methodology</span>
+                        </span>
+                    </div>
+                    <div class="methodology-grid">
+                        <div class="methodology-card">
+                            <h4>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                Public Status APIs
+                            </h4>
+                            <p>Incident logs and status transitions are aggregated programmatically from official provider feeds over a rolling 90-day window.</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                Zero Fake Benchmarks
+                            </h4>
+                            <p>Cumulative downtime metrics strictly reflect verified start and resolution timestamps published by the vendor.</p>
+                        </div>
+                        <div class="methodology-card">
+                            <h4>
+                                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                Independent Analysis
+                            </h4>
+                            <p>Our research is independent of cloud infrastructure providers and designed for SRE and DevOps evaluation.</p>
+                        </div>
+                    </div>
+                </section>
+                
+                <!-- Divulgation FTC Globale -->
+                <div class="disclosure-global">
+                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><line x1="12" y1="16" x2="12" y2="12"></line><line x1="12" y1="8" x2="12.01" y2="8"></line></svg>
+                    <div>
+                        <strong style="color: var(--text-700);">Transparency Disclosure:</strong> As an independent research initiative, we may earn a commission from SaaS providers mentioned on this page at no extra cost to you.
+                    </div>
+                </div>
+
+                <!-- Section Cross-Selling Dynamique (Reditus - B2B SaaS Growth & Partner Ecosystem) -->
+                {{ if .Params.outils_complementaires }}
+                <section class="cross-sell-section">
+                    <div class="cross-sell-header">
+                        <span class="cross-sell-eyebrow">
+                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="12 2 2 7 12 12 22 7 12 2"></polygon><polyline points="2 17 12 22 22 17"></polyline><polyline points="2 12 12 17 22 12"></polyline></svg>
+                            B2B SaaS Growth &amp; Partner Stack
+                        </span>
+                        <h3>Scale Your B2B SaaS Ecosystem</h3>
+                        <p>SaaS founders and engineering-led teams scaling recurring revenue alongside their infrastructure evaluate:</p>
+                    </div>
+                    
+                    <div class="cross-sell-grid">
+                        {{ range .Params.outils_complementaires }}
+                        <div class="cross-sell-card">
+                            <div class="cross-sell-body">
+                                <div class="cross-sell-main">
+                                    <div class="cross-sell-brand-head">
+                                        <div class="cross-sell-icon" aria-hidden="true">
+                                            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                                <path d="M16 21v-2a4 4 0 0 0-4-4H6a4 4 0 0 0-4 4v2"></path>
+                                                <circle cx="9" cy="7" r="4"></circle>
+                                                <path d="M22 21v-2a4 4 0 0 0-3-3.87"></path>
+                                                <path d="M16 3.13a4 4 0 0 1 0 7.75"></path>
+                                            </svg>
+                                        </div>
+                                        <div class="cross-sell-title-group">
+                                            <h4>{{ .nom }}</h4>
+                                            <span class="cross-sell-badge">{{ .categorie | default "B2B SaaS Affiliate & Partner Platform" }}</span>
+                                        </div>
+                                    </div>
+
+                                    <p>{{ .description }}</p>
+                                </div>
+
+                                <div class="cross-sell-cta-wrap">
+                                    <a href="{{ .url_affilie }}" rel="sponsored nofollow" class="cross-sell-btn plausible-event-name=Clic+CrossSell">
+                                        <span>Explore {{ .nom }}</span>
+                                        <span class="arrow">&rarr;</span>
+                                    </a>
+                                    <span class="cross-sell-cta-note">Verified B2B SaaS Network</span>
+                                </div>
+                            </div>
+
+                            <div class="cross-sell-specs">
+                                <span class="cross-sell-spec-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Exclusive B2B SaaS Focus
+                                </span>
+                                <span class="cross-sell-spec-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    Recurring Revenue &amp; Stripe Sync
+                                </span>
+                                <span class="cross-sell-spec-item">
+                                    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"></polyline></svg>
+                                    {{ .avantage | default "Verified B2B SaaS Marketplace" }}
+                                </span>
+                            </div>
+                        </div>
+                        {{ end }}
+                    </div>
+                </section>
+                {{ end }}
+            </article>
+        </div>
+    </main>
+    
+    <!-- Injection du footer Dark Slate aligné sur 980px -->
+    {{ partial "footer.html" . }}
+</body>
+</html>

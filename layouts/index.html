@@ -1,0 +1,859 @@
+<!-- Chemin exact : layouts/index.html -->
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {{ partial "head.html" . }}
+
+    <style>
+        /* Palette B2B SaaS Enterprise (Dark Slate, Deep Indigo & Emerald) */
+        :root { 
+            --primary: #4f46e5; 
+            --primary-dark: #4338ca; 
+            --primary-deeper: #3730a3;
+            --primary-light: #e0e7ff;
+            --primary-ultra-light: #eef2ff;
+            --dark-950: #090d16;
+            --dark-900: #0f172a;
+            --dark-800: #1e293b;
+            --text-900: #0f172a; 
+            --text-800: #1e293b;
+            --text-700: #334155;
+            --text-500: #64748b; 
+            --text-400: #94a3b8;
+            --bg-canvas: #f8fafc; /* Fond simple, pur et uni (sans motif) */
+            --bg-body: #f8fafc; 
+            --bg-card: #ffffff;
+            --border-light: #e2e8f0; 
+            --border-dark: #cbd5e1;
+            --emerald: #10b981;
+            --emerald-light: #ecfdf5;
+            --emerald-border: #a7f3d0;
+        }
+        
+        *, *::before, *::after {
+            box-sizing: border-box;
+        }
+
+        html {
+            scroll-behavior: smooth;
+            overflow-x: hidden;
+        }
+
+        /* Reset critique : Empêche les liens visités de devenir violets */
+        a { text-decoration: none; color: inherit; transition: all 0.2s ease; }
+        a:visited { color: inherit; }
+        
+        /* -----------------------------------------------------
+           1. BODY : FOND SIMPLE ET UNI (#f8fafc) & ÉCHELLE 980px
+           ----------------------------------------------------- */
+        body { 
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif; 
+            font-size: 15.5px;
+            line-height: 1.7; 
+            color: var(--text-700); 
+            background-color: var(--bg-canvas);
+            background-image: none;
+            margin: 0; 
+            padding: 0; 
+            overflow-x: hidden;
+            -webkit-font-smoothing: antialiased;
+            -moz-osx-font-smoothing: grayscale;
+        }
+
+        /* -----------------------------------------------------
+           2. NAVIGATION SOMBRE INTÉGRÉE AU HERO (Largeur 980px)
+           ----------------------------------------------------- */
+        .site-header {
+            background-color: rgba(9, 13, 22, 0.92);
+            backdrop-filter: blur(14px);
+            -webkit-backdrop-filter: blur(14px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.08);
+            position: sticky;
+            top: 0;
+            z-index: 50;
+        }
+        .nav-inner {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            max-width: 980px;
+            margin: 0 auto;
+            padding: 0.95rem 1.15rem;
+        }
+        @media (min-width: 640px) {
+            .nav-inner {
+                padding: 1rem 1.5rem;
+            }
+        }
+        .site-brand {
+            font-size: 1.05rem;
+            font-weight: 800;
+            color: #ffffff !important;
+            letter-spacing: -0.025em;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.55rem;
+        }
+        @media (min-width: 768px) {
+            .site-brand {
+                font-size: 1.1rem;
+            }
+        }
+        .brand-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            background: linear-gradient(135deg, #818cf8, #38bdf8);
+            box-shadow: 0 0 10px rgba(129, 140, 248, 0.85);
+            flex-shrink: 0;
+        }
+        .nav-links {
+            display: flex;
+            align-items: center;
+            gap: 1.5rem;
+        }
+        .nav-links a {
+            color: #cbd5e1;
+            font-weight: 500;
+            font-size: 0.88rem;
+            white-space: nowrap;
+        }
+        .nav-links a:hover {
+            color: #ffffff;
+        }
+        
+        /* -----------------------------------------------------
+           3. SECTION.REPORT-HERO / .HERO (980px)
+           Adaptée pour Mobile (360px-440px), iPad Mini (768px) et Desktop (880px+)
+           ----------------------------------------------------- */
+        .report-hero,
+        .hero { 
+            background-color: var(--dark-900);
+            background-image: 
+                radial-gradient(ellipse 80% 85% at 50% -20%, rgba(79, 70, 229, 0.36), transparent),
+                radial-gradient(circle at 85% 30%, rgba(56, 189, 248, 0.12), transparent 45%);
+            border-bottom: 1px solid var(--dark-800);
+            padding: 2.25rem 1rem 4.5rem;
+            color: #ffffff;
+            overflow: hidden;
+        }
+        @media (min-width: 640px) {
+            .report-hero,
+            .hero {
+                padding: 2.85rem 1.25rem 5.25rem;
+            }
+        }
+        @media (min-width: 880px) {
+            .report-hero,
+            .hero {
+                padding: 3.5rem 1.5rem 5.75rem;
+            }
+        }
+        .report-hero-inner,
+        .hero-inner {
+            max-width: 980px;
+            margin: 0 auto;
+            width: 100%;
+        }
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.42rem;
+            font-size: 0.64rem;
+            font-weight: 700;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: #e0e7ff;
+            background-color: rgba(79, 70, 229, 0.24);
+            border: 1px solid rgba(129, 140, 248, 0.4);
+            padding: 0.28rem 0.78rem;
+            border-radius: 9999px;
+            margin-bottom: 1rem;
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        @media (min-width: 640px) {
+            .hero-badge {
+                font-size: 0.7rem;
+                letter-spacing: 0.07em;
+                padding: 0.34rem 0.95rem;
+                margin-bottom: 1.2rem;
+            }
+        }
+        .hero-badge svg {
+            width: 13px;
+            height: 13px;
+            color: #818cf8;
+            flex-shrink: 0;
+        }
+
+        /* H1 calibré par palier : Mobile -> Tablette (768px) -> Desktop (880px+) */
+        .hero h1 { 
+            font-size: clamp(1.85rem, 5.2vw, 2.2rem); 
+            color: #ffffff; 
+            margin: 0 0 0.95rem 0; 
+            letter-spacing: -0.032em; 
+            line-height: 1.12;
+            font-weight: 800;
+            max-width: 920px;
+        }
+        @media (min-width: 640px) {
+            .hero h1 {
+                font-size: 2.35rem;
+                line-height: 1.1;
+                margin: 0 0 1.05rem 0;
+                letter-spacing: -0.035em;
+            }
+        }
+        @media (min-width: 880px) {
+            .hero h1 {
+                font-size: clamp(2.65rem, 4.2vw, 3.35rem);
+                line-height: 1.08;
+                margin: 0 0 1.15rem 0;
+                letter-spacing: -0.038em;
+            }
+        }
+
+        .hero p { 
+            font-size: 0.94rem; 
+            color: #94a3b8; 
+            max-width: 680px;
+            margin: 0 0 1.65rem 0;
+            line-height: 1.62;
+        }
+        @media (min-width: 640px) {
+            .hero p {
+                font-size: 1rem;
+                margin: 0 0 2rem 0;
+                line-height: 1.65;
+            }
+        }
+
+        /* Grille de 4 cartes KPI verrouillée avec minmax(0, 1fr) (Zéro débordement & Zéro titre coupé à 768px) */
+        .hero-kpi-grid {
+            display: grid;
+            grid-template-columns: repeat(2, minmax(0, 1fr));
+            gap: 0.65rem;
+            width: 100%;
+        }
+        @media (min-width: 740px) {
+            .hero-kpi-grid {
+                grid-template-columns: repeat(4, minmax(0, 1fr));
+                gap: 0.7rem;
+            }
+        }
+        @media (min-width: 880px) {
+            .hero-kpi-grid {
+                gap: 1rem;
+            }
+        }
+        .hero-kpi-card {
+            min-width: 0; /* Empêche tout débordement horizontal sur mobile et iPad Mini */
+            background: linear-gradient(180deg, rgba(30, 41, 59, 0.78) 0%, rgba(15, 23, 42, 0.92) 100%);
+            backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.12);
+            border-radius: 11px;
+            padding: 0.75rem 0.8rem;
+            display: flex;
+            flex-direction: column;
+            justify-content: flex-start;
+            gap: 0.26rem;
+            box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.08), 0 6px 16px -6px rgba(0, 0, 0, 0.35);
+        }
+        @media (min-width: 880px) {
+            .hero-kpi-card {
+                padding: 0.9rem 1.1rem;
+                border-radius: 12px;
+            }
+        }
+        /* Intitulé verrouillé sur 1 seule ligne : PUBLISHED BENCHMARKS ne se coupe plus à 768px */
+        .hero-kpi-label {
+            font-size: 0.6rem;
+            text-transform: uppercase;
+            letter-spacing: 0.045em;
+            color: #94a3b8;
+            font-weight: 700;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            line-height: 1.2;
+        }
+        @media (min-width: 880px) {
+            .hero-kpi-label {
+                font-size: 0.66rem;
+                letter-spacing: 0.055em;
+            }
+        }
+        .hero-kpi-value {
+            font-size: 0.84rem;
+            line-height: 1.28;
+            color: #ffffff;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 0.38rem;
+            min-width: 0;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        @media (min-width: 880px) {
+            .hero-kpi-value {
+                font-size: 0.92rem;
+            }
+        }
+        .kpi-dot-live {
+            width: 7px;
+            height: 7px;
+            border-radius: 50%;
+            background-color: var(--emerald);
+            box-shadow: 0 0 8px rgba(16, 185, 129, 0.9);
+            flex-shrink: 0;
+        }
+        
+        /* -----------------------------------------------------
+           4. CONTENEUR PRINCIPAL & FEUILLE DE RAPPORTS (980px)
+           ----------------------------------------------------- */
+        .home-main-container {
+            max-width: 980px;
+            margin: -3.15rem auto 4.5rem;
+            padding: 0 0.85rem;
+            position: relative;
+            z-index: 10;
+        }
+        @media (min-width: 640px) {
+            .home-main-container {
+                margin: -3.25rem auto 4.5rem;
+                padding: 0 1.25rem;
+            }
+        }
+        .home-sheet {
+            background-color: var(--bg-card);
+            border-radius: 20px;
+            padding: 1.65rem 1.15rem;
+            border: 1px solid var(--border-light);
+            box-shadow: 
+                0 16px 40px -14px rgba(15, 23, 42, 0.07),
+                0 2px 6px rgba(15, 23, 42, 0.02);
+        }
+        @media (min-width: 640px) {
+            .home-sheet {
+                padding: 2.25rem 1.75rem;
+            }
+        }
+        @media (min-width: 880px) {
+            .home-sheet {
+                padding: 2.85rem 3.25rem;
+            }
+        }
+
+        /* En-tête de la grille des rapports */
+        .section-header {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+            margin-bottom: 1.75rem;
+            border-bottom: 1px solid var(--border-light);
+            padding-bottom: 1rem;
+        }
+        .section-title {
+            font-size: 1.32rem;
+            color: var(--text-900);
+            margin: 0;
+            padding-left: 0.8rem;
+            border-left: 3.5px solid var(--primary);
+            font-weight: 800;
+            letter-spacing: -0.02em;
+            line-height: 1.25;
+        }
+        @media (min-width: 768px) {
+            .section-title {
+                font-size: 1.42rem;
+            }
+        }
+        .section-subtitle-pill {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.4rem;
+            font-size: 0.72rem;
+            font-weight: 700;
+            color: var(--primary-dark);
+            background-color: var(--primary-ultra-light);
+            border: 1px solid #c7d2fe;
+            padding: 0.25rem 0.75rem;
+            border-radius: 9999px;
+            white-space: nowrap;
+        }
+        .section-subtitle-pill::before {
+            content: '';
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--primary);
+        }
+        
+        /* -----------------------------------------------------
+           5. GRILLE DES CARTES DE RAPPORTS (.post-card)
+           ----------------------------------------------------- */
+        .post-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1.35rem;
+            align-items: stretch;
+        }
+        @media (min-width: 640px) {
+            .post-grid {
+                grid-template-columns: repeat(2, minmax(0, 1fr));
+                gap: 1.5rem;
+            }
+        }
+
+        .post-card { 
+            display: flex;
+            flex-direction: column;
+            height: 100%; 
+            min-width: 0;
+            background-color: var(--bg-card);
+            border: 1px solid var(--border-dark); 
+            border-radius: 15px;
+            transition: all 0.25s cubic-bezier(0.4, 0, 0.2, 1);
+            overflow: hidden;
+            box-shadow: 0 3px 10px -3px rgba(15, 23, 42, 0.04);
+            position: relative;
+        }
+        .post-card:hover { 
+            transform: translateY(-4px); 
+            border-color: var(--primary);
+            box-shadow: 0 16px 32px -10px rgba(79, 70, 229, 0.14), 0 4px 10px -4px rgba(15, 23, 42, 0.04); 
+        }
+        
+        .post-image-container { 
+            width: 100%; 
+            aspect-ratio: 16/9; 
+            background-color: var(--dark-900); 
+            border-bottom: 1px solid var(--border-light); 
+            overflow: hidden; 
+            position: relative;
+        }
+        .post-image { 
+            width: 100%; 
+            height: 100%; 
+            object-fit: cover; 
+            transition: transform 0.45s ease; 
+            display: block;
+        }
+        .post-card:hover .post-image { 
+            transform: scale(1.03);
+        }
+        .post-image-badge {
+            position: absolute;
+            top: 0.75rem;
+            right: 0.75rem;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.35rem;
+            background-color: rgba(15, 23, 42, 0.84);
+            backdrop-filter: blur(8px);
+            -webkit-backdrop-filter: blur(8px);
+            border: 1px solid rgba(255, 255, 255, 0.16);
+            color: #ffffff;
+            font-size: 0.68rem;
+            font-weight: 700;
+            padding: 0.22rem 0.6rem;
+            border-radius: 9999px;
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.25);
+        }
+        .post-image-badge-dot {
+            width: 6px;
+            height: 6px;
+            border-radius: 50%;
+            background-color: var(--emerald);
+            box-shadow: 0 0 6px rgba(16, 185, 129, 0.9);
+        }
+
+        .post-content {
+            padding: 1.25rem 1.35rem 1.15rem;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+        .post-tag {
+            align-self: flex-start;
+            font-size: 0.67rem;
+            text-transform: uppercase;
+            letter-spacing: 0.06em;
+            color: var(--primary-dark);
+            background-color: var(--primary-ultra-light);
+            border: 1px solid #c7d2fe;
+            padding: 0.15rem 0.55rem;
+            border-radius: 5px;
+            font-weight: 800;
+            margin-bottom: 0.65rem;
+            max-width: 100%;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        .post-title { 
+            color: var(--text-900) !important; 
+            font-size: 1.08rem; 
+            font-weight: 800; 
+            margin: 0 0 0.45rem 0; 
+            line-height: 1.35;
+            letter-spacing: -0.015em;
+        }
+        .post-excerpt {
+            font-size: 0.84rem;
+            color: var(--text-500);
+            margin: 0;
+            line-height: 1.55;
+            flex-grow: 1;
+        }
+        
+        .post-footer {
+            background-color: var(--bg-body);
+            border-top: 1px solid var(--border-light);
+            padding: 0.75rem 1.35rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            gap: 0.75rem;
+            margin-top: auto; 
+        }
+        .post-date {
+            font-size: 0.76rem;
+            color: var(--text-500);
+            font-weight: 600;
+            display: inline-flex;
+            align-items: center;
+            gap: 5px;
+            white-space: nowrap;
+        }
+        .post-date svg {
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+        .read-more {
+            font-size: 0.76rem;
+            color: #ffffff;
+            background-color: var(--dark-900);
+            border: 1px solid var(--dark-800);
+            padding: 0.34rem 0.75rem;
+            border-radius: 7px;
+            font-weight: 700;
+            display: inline-flex;
+            align-items: center;
+            white-space: nowrap;
+            flex-shrink: 0;
+            transition: all 0.2s ease;
+        }
+        .post-card:hover .read-more {
+            background-color: var(--primary);
+            border-color: var(--primary-dark);
+            box-shadow: 0 4px 10px rgba(79, 70, 229, 0.25);
+        }
+        .read-more .arrow {
+            display: inline-block;
+            margin-left: 0.3rem;
+            transition: transform 0.2s ease;
+        }
+        .post-card:hover .read-more .arrow {
+            transform: translateX(3px); 
+        }
+        
+        /* -----------------------------------------------------
+           6. SECTION E-E-A-T ("Commitment to Engineering Transparency")
+           ----------------------------------------------------- */
+        .trust-section {
+            margin-top: 2.75rem;
+            padding: 1.5rem 1.25rem;
+            background: linear-gradient(180deg, #f8fafc 0%, #f1f5f9 100%);
+            border: 1px solid var(--border-dark);
+            border-radius: 16px;
+        }
+        @media (min-width: 740px) {
+            .trust-section {
+                padding: 1.75rem;
+            }
+        }
+        .trust-header {
+            display: flex;
+            flex-wrap: wrap;
+            align-items: center;
+            justify-content: space-between;
+            gap: 0.65rem;
+            padding-bottom: 0.95rem;
+            margin-bottom: 1.25rem;
+            border-bottom: 1px solid var(--border-light);
+        }
+        .trust-header h2 {
+            font-size: 0.74rem;
+            color: var(--text-900);
+            font-weight: 800;
+            text-transform: uppercase;
+            letter-spacing: 0.07em;
+            line-height: 1.4;
+            margin: 0;
+            display: inline-flex;
+            align-items: center;
+            gap: 0.45rem;
+        }
+        .trust-header h2 svg {
+            width: 16px;
+            height: 16px;
+            color: var(--primary);
+            flex-shrink: 0;
+        }
+        .trust-verified-tag {
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: #047857;
+            background-color: var(--emerald-light);
+            border: 1px solid var(--emerald-border);
+            padding: 0.15rem 0.6rem;
+            border-radius: 9999px;
+            white-space: nowrap;
+        }
+
+        .trust-grid {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 1rem;
+        }
+        @media (min-width: 740px) {
+            .trust-grid {
+                grid-template-columns: repeat(3, minmax(0, 1fr));
+                gap: 1.1rem;
+            }
+        }
+        .trust-item {
+            background-color: var(--bg-card);
+            padding: 1.2rem 1.25rem;
+            border-radius: 12px;
+            border: 1px solid var(--border-light);
+            box-shadow: 0 2px 5px rgba(15, 23, 42, 0.02);
+            transition: transform 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+            display: flex;
+            flex-direction: column;
+        }
+        .trust-item:hover {
+            transform: translateY(-2px);
+            border-color: #a5b4fc;
+            box-shadow: 0 10px 20px -6px rgba(15, 23, 42, 0.06);
+        }
+        .trust-item-head {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            margin-bottom: 0.8rem;
+        }
+        .icon-box { 
+            width: 36px; 
+            height: 36px; 
+            background: linear-gradient(135deg, var(--primary-ultra-light) 0%, var(--primary-light) 100%); 
+            color: var(--primary); 
+            border-radius: 9px; 
+            display: flex; 
+            align-items: center; 
+            justify-content: center; 
+            border: 1px solid #c7d2fe;
+            flex-shrink: 0;
+        }
+        .icon-box svg { 
+            width: 17px; 
+            height: 17px; 
+            stroke-width: 2; 
+            stroke-linecap: round; 
+            stroke-linejoin: round; 
+            fill: none; 
+            stroke: currentColor; 
+        }
+        .trust-step-num {
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+            font-size: 0.68rem;
+            font-weight: 700;
+            color: var(--primary);
+            background-color: var(--primary-ultra-light);
+            border: 1px solid #c7d2fe;
+            padding: 0.1rem 0.42rem;
+            border-radius: 5px;
+        }
+        .trust-item h3 {
+            font-size: 0.94rem;
+            margin: 0 0 0.4rem 0;
+            color: var(--text-900);
+            font-weight: 800;
+            letter-spacing: -0.015em;
+            line-height: 1.3;
+        }
+        .trust-item p {
+            font-size: 0.82rem;
+            color: var(--text-500);
+            margin: 0;
+            line-height: 1.58;
+        }
+        
+        /* Ajustements Mobile (< 640px) */
+        @media (max-width: 639px) {
+            .nav-links .nav-legal-link { display: none; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 1. Navigation Sombre Glassmorphism (Alignée sur 980px) -->
+    <header class="site-header">
+        <div class="nav-inner">
+            <a href="/" class="site-brand">
+                <span class="brand-dot" aria-hidden="true"></span>
+                <span>{{ .Site.Title }}</span>
+            </a>
+            <nav class="nav-links">
+                <a href="/">Latest Reports</a>
+                {{ range where .Site.RegularPages "Section" "legal" }}
+                <a href="{{ .RelPermalink }}" class="nav-legal-link">{{ .Title }}</a>
+                {{ end }}
+            </nav>
+        </div>
+    </header>
+
+    <!-- 2. Bannière Hero "Dark Slate" Pleine Largeur (Conteneur interne 980px) -->
+    <section class="hero report-hero">
+        <div class="hero-inner report-hero-inner">
+            <span class="hero-badge">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline></svg>
+                <span>Independent Cloud Observability Research</span>
+            </span>
+            <h1>Uptime Intel &amp; Infrastructure Benchmarks</h1>
+            <p>{{ .Site.Params.description }}</p>
+
+            <!-- Bandeau de 4 cartes KPI horizontales -->
+            {{ $posts := where .Site.RegularPages "Section" "posts" }}
+            <div class="hero-kpi-grid">
+                <div class="hero-kpi-card">
+                    <span class="hero-kpi-label">Telemetry Pipeline</span>
+                    <span class="hero-kpi-value"><span class="kpi-dot-live"></span><span>Verified Public APIs</span></span>
+                </div>
+                <div class="hero-kpi-card">
+                    <span class="hero-kpi-label">Audit Window</span>
+                    <span class="hero-kpi-value"><span>90-Day Rolling Log</span></span>
+                </div>
+                <div class="hero-kpi-card">
+                    <span class="hero-kpi-label">Published Benchmarks</span>
+                    <span class="hero-kpi-value"><span>{{ len $posts }} Active Reports</span></span>
+                </div>
+                <div class="hero-kpi-card">
+                    <span class="hero-kpi-label">Research Model</span>
+                    <span class="hero-kpi-value"><span>Independent SRE</span></span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 3. Conteneur Principal Symétrique (980px) en superposition -->
+    <main class="home-main-container">
+        <div class="home-sheet">
+            <div class="section-header">
+                <h2 class="section-title">Latest Technical Analysis</h2>
+                <span class="section-subtitle-pill">Programmatic Status Audits</span>
+            </div>
+            
+            <div class="post-grid">
+                {{ range $posts }}
+                <a href="{{ .Permalink }}" class="post-card">
+                    <!-- Image de couverture avec badge Glassmorphism en haut à droite -->
+                    <div class="post-image-container">
+                        <img src="{{ .Params.image | default "/images/default-cover.svg" }}" alt="{{ .Title }}" loading="lazy" class="post-image">
+                        {{ with .Params.tracked_incidents_count }}
+                        <span class="post-image-badge">
+                            <span class="post-image-badge-dot" aria-hidden="true"></span>
+                            {{ . }} Tracked Events
+                        </span>
+                        {{ end }}
+                    </div>
+
+                    <div class="post-content">
+                        <span class="post-tag">{{ if .Params.keyword }}{{ .Params.keyword }}{{ else }}Infrastructure{{ end }}</span>
+                        <h3 class="post-title">{{ .Title }}</h3>
+                        <p class="post-excerpt">Historical outage telemetry, official status timeline, and synthetic monitoring comparison.</p>
+                    </div>
+
+                    <div class="post-footer">
+                        <span class="post-date">
+                            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"></circle><polyline points="12 6 12 12 16 14"></polyline></svg>
+                            <span>Updated {{ .Lastmod.Format "Jan 2, 2006" }}</span>
+                        </span>
+                        <span class="read-more">View Report <span class="arrow">&rarr;</span></span>
+                    </div>
+                </a>
+                {{ end }}
+            </div>
+
+            <!-- Section de Confiance E-E-A-T -->
+            <section class="trust-section" aria-label="Commitment to Engineering Transparency">
+                <div class="trust-header">
+                    <h2>
+                        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path><path d="m9 12 2 2 4-4"></path></svg>
+                        <span>Commitment to Engineering Transparency</span>
+                    </h2>
+                    <span class="trust-verified-tag">E-E-A-T Verified Methodology</span>
+                </div>
+                
+                <div class="trust-grid">
+                    <!-- Pilier 1 : Sourcing de Données (Fraîcheur) -->
+                    <div class="trust-item">
+                        <div class="trust-item-head">
+                            <div class="icon-box" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <ellipse cx="12" cy="5" rx="9" ry="3"></ellipse>
+                                    <path d="M3 5V19A9 3 0 0 0 21 19V5"></path>
+                                    <path d="M3 12A9 3 0 0 0 21 12"></path>
+                                </svg>
+                            </div>
+                            <span class="trust-step-num">01 / DATA</span>
+                        </div>
+                        <h3>Programmatic Data Sourcing</h3>
+                        <p>Our analysis relies on programmatic checks of vendor status pages and independent developer community incident reports ensuring data freshness.</p>
+                    </div>
+                    
+                    <!-- Pilier 2 : Examen Indépendant (Méthodologie) -->
+                    <div class="trust-item">
+                        <div class="trust-item-head">
+                            <div class="icon-box" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M2 12s3-7 10-7 10 7 10 7-3 7-10 7-10-7-10-7Z"></path>
+                                    <circle cx="12" cy="12" r="3"></circle>
+                                </svg>
+                            </div>
+                            <span class="trust-step-num">02 / AUDIT</span>
+                        </div>
+                        <h3>Independent Scrutiny</h3>
+                        <p>We evaluate SaaS observability solutions based on architectural strength, routing reliability, and incident management depth, not just marketing claims.</p>
+                    </div>
+                    
+                    <!-- Pilier 3 : Conformité FTC (Transparence) -->
+                    <div class="trust-item">
+                        <div class="trust-item-head">
+                            <div class="icon-box" aria-hidden="true">
+                                <svg viewBox="0 0 24 24">
+                                    <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                                    <path d="m9 12 2 2 4-4"></path>
+                                </svg>
+                            </div>
+                            <span class="trust-step-num">03 / FTC</span>
+                        </div>
+                        <h3>FTC Compliant Transparency</h3>
+                        <p>We maintain full transparency. We may earn a commission from SaaS providers mentioned on this site if you deploy through our links, at no extra cost to you.</p>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </main>
+
+    <!-- Injection du footer Dark Slate aligné sur 980px -->
+    {{ partial "footer.html" . }}
+</body>
+</html>

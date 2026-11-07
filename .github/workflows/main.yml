@@ -1,0 +1,194 @@
+# Chemin exact : .github/workflows/main.yml
+name: Vecteur 1 - Pipeline SEO Programmatique
+
+# ---------------------------------------------------------
+# 1. DÉCLENCHEURS (Triggers)
+# ---------------------------------------------------------
+on:
+  # Déclenchement manuel depuis l'onglet Actions (bouton "Run workflow")
+  # et point d'entrée utilisé par l'API pour réinitialiser l'inactivité
+  workflow_dispatch:
+
+  # Déclenchement automatique à chaque modification poussée sur la branche principale
+  push:
+    branches:
+      - main
+      - master
+
+  # Déclenchement planifié quotidien : 02:17 UTC (hors début d'heure pile '0 2 * * *'
+  # pour éviter les embouteillages et la gigue de planification des serveurs GitHub)
+  schedule:
+    - cron: '17 2 * * *'
+
+# ---------------------------------------------------------
+# 2. PERMISSIONS GLOBALES PAR DÉFAUT (Moindre privilège)
+# ---------------------------------------------------------
+permissions:
+  contents: read
+
+# ---------------------------------------------------------
+# 3. CONTRÔLE DE CONCURRENCE
+# ---------------------------------------------------------
+# Empêche deux exécutions de se chevaucher et de verrouiller le cache ou le déploiement
+concurrency:
+  group: "pages-pipeline"
+  cancel-in-progress: false
+
+# ---------------------------------------------------------
+# 4. SÉQUENCE D'EXÉCUTION (Job principal)
+# ---------------------------------------------------------
+jobs:
+  build-and-deploy:
+    runs-on: ubuntu-latest
+    # Coupe-circuit matériel : tue le job s'il bloque plus de 15 minutes (défaut GitHub : 360 min)
+    timeout-minutes: 15
+
+    # Permissions strictement limitées aux besoins de ce job :
+    # - pages & id-token : déploiement GitHub Pages
+    # - issues : ouverture/mise à jour automatique d'une Issue en cas d'échec
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
+      issues: write
+
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+
+    steps:
+      # ÉTAPE A : Signal de démarrage optionnel (Dead Man's Switch)
+      # Ne s'active que si le secret HEALTHCHECKS_PING_URL est configuré dans le dépôt
+      - name: 🩺 Signal de démarrage (Dead Man's Switch - Optionnel)
+        env:
+          HC_PING_URL: ${{ secrets.HEALTHCHECKS_PING_URL }}
+        run: |
+          if [ -n "$HC_PING_URL" ]; then
+            echo "Envoi du signal de démarrage vers le moniteur externe..."
+            curl -fsS -m 10 --retry 3 "${HC_PING_URL}/start" || true
+          else
+            echo "Aucun secret HEALTHCHECKS_PING_URL configuré (optionnel). Étape ignorée."
+          fi
+
+      # ÉTAPE B : Récupération du code source et de l'historique Git complet (fetch-depth: 0 pour GitInfo)
+      - name: 📥 Clonage du dépôt
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      # ÉTAPE C : Initialisation de Python (avec cache pip intégré pour accélérer l'installation)
+      - name: 🐍 Configuration de Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+          cache: 'pip'
+
+      # ÉTAPE D : Restauration et sauvegarde du cache HTTP SQLite (.cache/http_cache.sqlite)
+      # La clé unique par run_id associée à restore-keys permet de mettre à jour le fichier SQLite à chaque exécution
+      - name: 💾 Restauration du cache HTTP SQLite
+        uses: actions/cache@v4
+        with:
+          path: .cache
+          key: http-sqlite-cache-${{ runner.os }}-${{ github.run_id }}
+          restore-keys: |
+            http-sqlite-cache-${{ runner.os }}-
+
+      # ÉTAPE E : Installation de toutes les dépendances vérifiées du Bloc 1
+      - name: 📦 Installation des dépendances Python
+        run: |
+          set -o pipefail
+          pip install -r requirements.txt 2>&1 | tee -a /tmp/pipeline.log
+
+      # ÉTAPE F : Collecte résiliente des données d'incidents (écrit data/outages.json)
+      - name: 📡 Ingestion des données d'incidents (API publiques)
+        run: |
+          set -o pipefail
+          python scripts/ingest_outages.py 2>&1 | tee -a /tmp/pipeline.log
+
+      # ÉTAPE G : Quality Gate et génération programmatique des pages AIDA
+      - name: 📝 Quality Gate et génération des articles Markdown
+        run: |
+          set -o pipefail
+          python scripts/generate_pages.py --verbose 2>&1 | tee -a /tmp/pipeline.log
+
+      # ÉTAPE H : Installation du générateur statique Hugo
+      - name: 🏗️ Configuration de Hugo
+        uses: peaceiris/actions-hugo@v3
+        with:
+          hugo-version: 'latest'
+          extended: true
+
+      # ÉTAPE I : Compilation statique du site (HTML/CSS/WebP minifiés dans ./public)
+      - name: ⚙️ Compilation Hugo (Build)
+        run: |
+          set -o pipefail
+          hugo --minify 2>&1 | tee -a /tmp/pipeline.log
+
+      # ÉTAPE J : Empaquetage sécurisé de l'artefact pour GitHub Pages
+      - name: 📦 Upload de l'artefact GitHub Pages
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: ./public
+
+      # ÉTAPE K : Déploiement final en ligne
+      - name: 🚀 Déploiement sur GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+
+      # ÉTAPE L : Signal de succès optionnel (Dead Man's Switch)
+      - name: ✅ Signal de succès (Dead Man's Switch - Optionnel)
+        if: success()
+        env:
+          HC_PING_URL: ${{ secrets.HEALTHCHECKS_PING_URL }}
+        run: |
+          if [ -n "$HC_PING_URL" ]; then
+            curl -fsS -m 10 --retry 3 "${HC_PING_URL}" || true
+          fi
+
+      # ÉTAPE M : Alerte d'échec native (0 $) + Signal d'échec Dead Man's Switch
+      # S'exécute UNIQUEMENT si l'une des étapes précédentes a échoué (if: failure())
+      - name: 🚨 Alerte d'échec (Création/Mise à jour d'Issue GitHub avec logs)
+        if: failure()
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          HC_PING_URL: ${{ secrets.HEALTHCHECKS_PING_URL }}
+        run: |
+          # 1. Extraction des 40 dernières lignes du journal d'exécution
+          if [ -f /tmp/pipeline.log ]; then
+            LOG_TAIL=$(tail -n 40 /tmp/pipeline.log)
+          else
+            LOG_TAIL="Aucun journal /tmp/pipeline.log disponible (échec avant les étapes Python/Hugo)."
+          fi
+
+          # 2. Notification instantanée d'échec au moniteur externe (si configuré)
+          if [ -n "$HC_PING_URL" ]; then
+            curl -fsS -m 10 --retry 3 --data-raw "$LOG_TAIL" "${HC_PING_URL}/fail" || true
+          fi
+
+          # 3. Ouverture ou mise à jour d'une Issue GitHub native via GitHub CLI (gh)
+          ISSUE_TITLE="[ALERTE CI/CD] Échec du pipeline Vecteur 1"
+          RUN_URL="${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }}"
+
+          BODY_FILE="/tmp/issue_body.md"
+          {
+            echo "### ❌ Échec détecté sur le pipeline Vecteur 1"
+            echo "- **Exécution (Run) :** [Voir les détails dans GitHub Actions](${RUN_URL})"
+            echo "- **Déclencheur :** \`${{ github.event_name }}\`"
+            echo "- **Date (UTC) :** \`$(date -u +"%Y-%m-%d %H:%M:%S UTC")\`"
+            echo ""
+            echo "#### 📋 Dernières lignes du journal d'exécution (\`pipeline.log\`) :"
+            echo "\`\`\`text"
+            echo "${LOG_TAIL}"
+            echo "\`\`\`"
+          } > "$BODY_FILE"
+
+          # Recherche d'une issue d'alerte déjà ouverte pour éviter de créer des doublons
+          EXISTING_ISSUE=$(gh issue list --repo "${{ github.repository }}" --state open --search "\"${ISSUE_TITLE}\" in:title" --json number --jq '.[0].number')
+
+          if [ -n "$EXISTING_ISSUE" ] && [ "$EXISTING_ISSUE" != "null" ]; then
+            echo "Mise à jour de l'issue existante #${EXISTING_ISSUE}..."
+            gh issue comment "$EXISTING_ISSUE" --repo "${{ github.repository }}" --body-file "$BODY_FILE"
+          else
+            echo "Création d'une nouvelle issue d'alerte..."
+            gh issue create --repo "${{ github.repository }}" --title "$ISSUE_TITLE" --body-file "$BODY_FILE"
+          fi

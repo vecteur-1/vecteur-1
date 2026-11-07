@@ -1,0 +1,27 @@
+# Chemin exact : .gitignore
+# Ignorer les dossiers générés automatiquement par Hugo en local
+/public/
+/resources/
+.hugo_build.lock
+
+# Ignorer le cache HTTP SQLite (et ses fichiers journaux WAL/SHM)
+/.cache/
+*.sqlite
+*.sqlite-wal
+*.sqlite-shm
+
+# Ignorer l'environnement virtuel et les fichiers compilés Python
+/scripts/venv/
+/.venv/
+/venv/
+__pycache__/
+*.pyc
+
+# Ignorer les fichiers de variables d'environnement locales (sécurité)
+.env
+.env.*
+
+# Ignorer les fichiers système parasites (Windows / macOS)
+.DS_Store
+Thumbs.db
+Desktop.ini
